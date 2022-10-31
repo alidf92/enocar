@@ -1,0 +1,185 @@
+@font-face {
+    font-family: estedad;
+    font-style: normal;
+    font-weight: 100;
+    src: url("./../public/fonts/Estedad-Thin.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: estedad;
+    font-style: normal;
+    font-weight: 200;
+    src: url("./../public/fonts/Estedad-ExtraLight.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: estedad;
+    font-style: normal;
+    font-weight: 300;
+    src: url("./../public/fonts/Estedad-Light.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: estedad;
+    font-style: normal;
+    font-weight: 500;
+    src: url("./../public/fonts/Estedad-Medium.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: estedad;
+    font-style: normal;
+    font-weight: 600;
+    src: url("./../public/fonts/Estedad-SemiBold.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: estedad;
+    font-style: normal;
+    font-weight: 800;
+    src: url("./../public/fonts/Estedad-ExtraBold.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: estedad;
+    font-style: normal;
+    font-weight: 900;
+    src: url("./../public/fonts/Estedad-Black.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: estedad;
+    font-style: normal;
+    font-weight: bold;
+    src: url("./../public/fonts/Estedad-Bold.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: estedad;
+    font-style: normal;
+    font-weight: normal;
+    src: url("./../public/fonts/Estedad-Regular.woff2") format("woff2");
+}
+
+* {
+    font-family: estedad, sans-serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+body {
+    direction: rtl;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+li {
+    -webkit-tap-highlight-color: transparent;
+}
+h6 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.d-flex {
+    display: flex;
+}
+button,
+input {
+    border: none;
+    outline: none;
+}
+.react-code-input {
+    margin-right: auto;
+    margin-left: auto;
+    display: none;
+}
+.l-t-r {
+    display: flex;
+    align-items: center;
+    direction: ltr !important;
+}
+
+.l-t-r input {
+    direction: ltr !important;
+    font-size: 13px !important;
+    width: 45px !important;
+    height: 55px !important;
+    padding-left: 19px !important;
+    border: 1px solid #eae9f0 !important;
+    background-color: transparent !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+}
+
+@media (max-width: 370px) {
+}
+
+button {
+    cursor: pointer;
+}
+.c-p {
+    cursor: pointer;
+}
+
+.map-container {
+    width: 100vw;
+    position: relative;
+}
+
+.d-none {
+    display: none;
+}
+
+button {
+    transition: 0.3s all;
+}
+.mapboxgl-ctrl-logo,
+.mapboxgl-ctrl-bottom-right {
+    display: none !important;
+}
+.disabled {
+    margin-top: 12px;
+    margin-bottom: 16px;
+    pointer-events: none;
+    opacity: 0.7;
+    height: 149px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mapboxgl-marker img {
+    width: 70px !important;
+}
+
+input {
+    padding: 16px;
+}
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
