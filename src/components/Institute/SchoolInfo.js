@@ -9,11 +9,46 @@ import { ChartOne } from "./ServiceChart";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
+import CheckInfo from "./CheckInfo";
+import CashInfo from "./CashInfo";
 
 const Main = styled.div`
     padding: 30px 36px;
+    .all {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #f3f6f9;
+        border-radius: 10px;
+        margin-top: 12px;
+        padding: 20px;
+        h6 {
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 16px;
+            text-align: right;
+            color: #5e6278;
+        }
+        span {
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 16px;
+            color: #5e6278;
+        }
+    }
     .w-90 {
         width: 90px !important;
+    }
+    .bg-red {
+        background: #fff5f8 !important;
+        color: #f1416c !important;
+    }
+    .bg-green {
+        background: #e8fff3 !important;
+        color: #50cd89 !important;
+    }
+    .bg-yellow {
+        background: #f1bc00;
     }
     .row-btns {
         display: flex;
@@ -1106,7 +1141,7 @@ const SchoolInfo = (props) => {
     //         });
     //     });
     // };
-    console.log(props.data.SchoolManage);
+    console.log(props.data.ListStudentSchool);
 
     const [showCom, setShowCom] = useState(false);
     const [travelTabActive, setTravelTabActive] = useState(1);
@@ -1119,6 +1154,22 @@ const SchoolInfo = (props) => {
     function handleEnd(vals) {
         setEndDate(vals.toDate());
     }
+
+    const [showNewCheck, setShowNewCheck] = useState(false);
+    const [showDet, setShowDet] = useState(false);
+    const [showCashDet, setShowCashDet] = useState(false);
+    const [cashItem, setCashItem] = useState([]);
+    const [item, setItem] = useState([]);
+    let all = 0;
+
+    props.data.TransactionCashAtInstitution !== undefined &&
+        props.data.TransactionCashAtInstitution.map((item) => {
+            all += Number(item.check_amount);
+        });
+    props.data.TransactionCheckAtInstitution !== undefined &&
+        props.data.TransactionCheckAtInstitution.map((item) => {
+            all += Number(item.check_amount);
+        });
     return (
         <Main>
             <div className="head">
@@ -1694,7 +1745,13 @@ const SchoolInfo = (props) => {
             ) : activeTab === 2 ? (
                 <TableDiv>
                     <div className="head">
-                        <h6>دانش آموزان (231)</h6>
+                        <h6>
+                            دانش آموزان (
+                            {props.data.ListStudentSchool !== undefined &&
+                                props.data.ListStudentSchool !== null &&
+                                props.data.ListStudentSchool.length}
+                            )
+                        </h6>
                         <div className="tabs">
                             <span
                                 className={activeTab === 1 && ""}
@@ -1822,170 +1879,154 @@ const SchoolInfo = (props) => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <div className="d-flex align-items-center">
-                                        <svg
-                                            width="51"
-                                            height="50"
-                                            viewBox="0 0 51 50"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                x="0.330566"
-                                                width="50"
-                                                height="50"
-                                                rx="6"
-                                                fill="#D7F9EF"
-                                            />
-                                            <g clip-path="url(#clip0_360_21090)">
-                                                <path
-                                                    d="M31.1034 25.0753L36.1226 18.7647C37.79 16.6257 37.4701 13.4255 35.2132 11.6738C32.9731 9.9558 29.8233 10.4106 28.139 12.5833C28.0043 12.735 24.1306 17.5857 23.6252 18.1921C23.6083 18.2258 23.5914 18.2426 23.5914 18.2426V15.6825C23.5914 12.9033 21.3177 10.6296 18.5385 10.6296C15.7593 10.6296 13.4856 12.9033 13.4856 15.6825V34.3221C13.4856 37.1012 15.7593 39.375 18.5385 39.375C21.3177 39.375 23.5914 37.1012 23.5914 34.3221V31.8125C23.7263 31.9809 28.1221 37.41 28.139 37.41C29.8739 39.6164 33.0068 40.0207 35.2132 38.3026C37.4869 36.5341 37.7731 33.4294 36.1226 31.2735L31.1034 25.0753Z"
-                                                    fill="#7FE881"
-                                                />
-                                                <path
-                                                    d="M36.1227 31.2735C37.7733 33.4294 37.4871 36.5341 35.2133 38.3026C33.007 40.0207 29.874 39.6164 28.1391 37.41C28.1223 37.41 23.7265 31.9809 23.5916 31.8125V18.2426C23.5916 18.2426 23.6084 18.2258 23.6253 18.1921C24.1306 17.5857 28.0044 12.735 28.1391 12.5833C29.8234 10.4106 32.9733 9.95579 35.2133 11.6738C37.4702 13.4255 37.7901 16.6257 36.1227 18.7647L31.1035 25.0753L36.1227 31.2735Z"
-                                                    fill="#5BC980"
-                                                />
-                                            </g>
-                                            <defs>
-                                                <clipPath id="clip0_360_21090">
-                                                    <rect
-                                                        x="10.9556"
-                                                        y="10.625"
-                                                        width="28.75"
-                                                        height="28.75"
-                                                        rx="6"
-                                                        fill="white"
+                            {props.data.ListStudentSchool !== undefined &&
+                                props.data.ListStudentSchool.map((item) => {
+                                    return (
+                                        <tr>
+                                            <td>
+                                                <div className="d-flex align-items-center">
+                                                    <img
+                                                        src={item.student_image}
+                                                        alt=""
+                                                        width={50}
+                                                        height={50}
                                                     />
-                                                </clipPath>
-                                            </defs>
-                                        </svg>
 
-                                        <div>
-                                            <span className="span-1">
-                                                حسام الدین طباطبایی
-                                            </span>
-                                            <span className="span-2">
-                                                09123456789
-                                            </span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span className="span-2">
-                                        خیابان فرهنگ، میدان امید، کوچه آرزرو
-                                        پلاک ۲۱
-                                    </span>
-                                </td>
-                                <td>
-                                    <span className="span-1">5</span>
-                                    <span className="span-2">
-                                        کیلومتر سرویس
-                                    </span>
-                                </td>
-                                <td>
-                                    <span className="span-1">2 سرویس</span>
-                                    <span className="span-2">رفت و برگشت</span>
-                                </td>
-                                <td>
-                                    {/* {item.request_status ==
-                                            "ok" ? (
-                                                <div
-                                                    className={
-                                                        "stts"
-                                                    }
-                                                >
-                                                    فعال
+                                                    <div>
+                                                        <span className="span-1">
+                                                            {item.student_name}{" "}
+                                                            {
+                                                                item.student_l_name
+                                                            }
+                                                        </span>
+                                                        <span className="span-2">
+                                                            {item.student_phone}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            ) : item.request_status ==
-                                              "reject" ? (
-                                                <div
-                                                    className={
-                                                        "stts bg-red"
-                                                    }
-                                                >
-                                                    رد درخواست
-                                                </div>
-                                            ) : (
-                                                <div className="stts bg-yellow">
-                                                    در انتظار تایید
-                                                </div>
-                                            )} */}
-                                    <div className={"status"}>
-                                        در انتظار تایید مالی
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="d-flex">
-                                        <svg
-                                            className="ml-10"
-                                            width="33"
-                                            height="32"
-                                            viewBox="0 0 33 32"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                x="0.692383"
-                                                width="32"
-                                                height="32"
-                                                rx="6"
-                                                fill="#F3F6F9"
-                                            />
-                                            <path
-                                                fill-rule="evenodd"
-                                                clip-rule="evenodd"
-                                                d="M23.4098 20.1895C23.7289 20.4929 24.256 20.2656 24.2544 19.8253L24.244 17.0669V12.0143C24.244 11.0841 23.451 10.3301 22.4728 10.3301H14.207C13.2288 10.3301 12.4358 11.0841 12.4358 12.0143V14.3301H16.3335C17.9903 14.3301 19.3335 15.6732 19.3335 17.3301V18.7511H21.8971L23.4098 20.1895Z"
-                                                fill="#3699FF"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                fill-rule="evenodd"
-                                                clip-rule="evenodd"
-                                                d="M9.50757 20.3307V16.9974C9.50757 16.261 10.1354 15.6641 10.9098 15.6641H16.5187C17.2931 15.6641 17.9209 16.261 17.9209 16.9974V20.3307C17.9209 21.0671 17.2931 21.6641 16.5187 21.6641H10.9909L10.3624 22.2361C10.0413 22.5283 9.5259 22.3005 9.5259 21.8663V20.5469C9.51384 20.4765 9.50757 20.4043 9.50757 20.3307ZM12.3225 17.9974C12.3225 17.8133 12.4717 17.6641 12.6558 17.6641H16.1958C16.3799 17.6641 16.5292 17.8133 16.5292 17.9974C16.5292 18.1815 16.3799 18.3307 16.1958 18.3307H12.6558C12.4717 18.3307 12.3225 18.1815 12.3225 17.9974ZM14.7592 18.9974C14.5751 18.9974 14.4258 19.1466 14.4258 19.3307C14.4258 19.5148 14.5751 19.6641 14.7592 19.6641H16.1958C16.3799 19.6641 16.5292 19.5148 16.5292 19.3307C16.5292 19.1466 16.3799 18.9974 16.1958 18.9974H14.7592Z"
-                                                fill="#3699FF"
-                                            />
-                                        </svg>
+                                            </td>
+                                            <td>
+                                                <span className="span-2">
+                                                    {item.student_address}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className="span-1">
+                                                    {item.student_km}
+                                                </span>
+                                                <span className="span-2">
+                                                    کیلومتر{" "}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className="span-1">
+                                                    {item.student_count_service}{" "}
+                                                    سرویس
+                                                </span>
+                                                <span className="span-2">
+                                                    رفت و برگشت
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {item.student_status == "ok" ? (
+                                                    <div
+                                                        className={
+                                                            "status bg-green"
+                                                        }
+                                                    >
+                                                        تایید شده
+                                                    </div>
+                                                ) : item.student_status ==
+                                                  "reject" ? (
+                                                    <div
+                                                        className={
+                                                            "status bg-red"
+                                                        }
+                                                    >
+                                                        رد شده
+                                                    </div>
+                                                ) : (
+                                                    <div className="status bg-yellow">
+                                                        در انتظار تایید مالی
+                                                    </div>
+                                                )}
+                                            </td>
+                                            <td>
+                                                <div className="d-flex">
+                                                    <svg
+                                                        className="ml-10"
+                                                        width="33"
+                                                        height="32"
+                                                        viewBox="0 0 33 32"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <rect
+                                                            x="0.692383"
+                                                            width="32"
+                                                            height="32"
+                                                            rx="6"
+                                                            fill="#F3F6F9"
+                                                        />
+                                                        <path
+                                                            fill-rule="evenodd"
+                                                            clip-rule="evenodd"
+                                                            d="M23.4098 20.1895C23.7289 20.4929 24.256 20.2656 24.2544 19.8253L24.244 17.0669V12.0143C24.244 11.0841 23.451 10.3301 22.4728 10.3301H14.207C13.2288 10.3301 12.4358 11.0841 12.4358 12.0143V14.3301H16.3335C17.9903 14.3301 19.3335 15.6732 19.3335 17.3301V18.7511H21.8971L23.4098 20.1895Z"
+                                                            fill="#3699FF"
+                                                        />
+                                                        <path
+                                                            opacity="0.3"
+                                                            fill-rule="evenodd"
+                                                            clip-rule="evenodd"
+                                                            d="M9.50757 20.3307V16.9974C9.50757 16.261 10.1354 15.6641 10.9098 15.6641H16.5187C17.2931 15.6641 17.9209 16.261 17.9209 16.9974V20.3307C17.9209 21.0671 17.2931 21.6641 16.5187 21.6641H10.9909L10.3624 22.2361C10.0413 22.5283 9.5259 22.3005 9.5259 21.8663V20.5469C9.51384 20.4765 9.50757 20.4043 9.50757 20.3307ZM12.3225 17.9974C12.3225 17.8133 12.4717 17.6641 12.6558 17.6641H16.1958C16.3799 17.6641 16.5292 17.8133 16.5292 17.9974C16.5292 18.1815 16.3799 18.3307 16.1958 18.3307H12.6558C12.4717 18.3307 12.3225 18.1815 12.3225 17.9974ZM14.7592 18.9974C14.5751 18.9974 14.4258 19.1466 14.4258 19.3307C14.4258 19.5148 14.5751 19.6641 14.7592 19.6641H16.1958C16.3799 19.6641 16.5292 19.5148 16.5292 19.3307C16.5292 19.1466 16.3799 18.9974 16.1958 18.9974H14.7592Z"
+                                                            fill="#3699FF"
+                                                        />
+                                                    </svg>
 
-                                        <button
-                                            onClick={() => {
-                                                // setShowCom(
-                                                //     true
-                                                // );
-                                                // getDriverDet(
-                                                //     item
-                                                // );
-                                                // setIdToReq(
-                                                //     item.request_id
-                                                // );
-                                            }}
-                                        >
-                                            مشاهده پروفایل
-                                            <svg
-                                                width="7"
-                                                height="12"
-                                                viewBox="0 0 7 12"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    d="M6.38726 1.65656C6.70769 1.33613 6.70769 0.816613 6.38726 0.496183C6.06683 0.175752 5.54731 0.175752 5.22688 0.496182L0.3038 5.41926C-0.00682905 5.72989 -0.0176973 6.23006 0.279145 6.55389L4.79196 11.477C5.09817 11.811 5.6172 11.8336 5.95125 11.5274C6.2853 11.2212 6.30786 10.7021 6.00165 10.3681L2.01969 6.02413L6.38726 1.65656Z"
-                                                    fill="#3699FF"
-                                                />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                                                    <button
+                                                        onClick={() => {
+                                                            // setShowCom(
+                                                            //     true
+                                                            // );
+                                                            // getDriverDet(
+                                                            //     item
+                                                            // );
+                                                            // setIdToReq(
+                                                            //     item.request_id
+                                                            // );
+                                                        }}
+                                                    >
+                                                        مشاهده پروفایل
+                                                        <svg
+                                                            width="7"
+                                                            height="12"
+                                                            viewBox="0 0 7 12"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <path
+                                                                d="M6.38726 1.65656C6.70769 1.33613 6.70769 0.816613 6.38726 0.496183C6.06683 0.175752 5.54731 0.175752 5.22688 0.496182L0.3038 5.41926C-0.00682905 5.72989 -0.0176973 6.23006 0.279145 6.55389L4.79196 11.477C5.09817 11.811 5.6172 11.8336 5.95125 11.5274C6.2853 11.2212 6.30786 10.7021 6.00165 10.3681L2.01969 6.02413L6.38726 1.65656Z"
+                                                                fill="#3699FF"
+                                                            />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                         </tbody>
                     </table>
                 </TableDiv>
             ) : activeTab === 3 ? (
                 <TableDiv>
                     <div className="head">
-                        <h6>سرویس ها(3)</h6>
+                        <h6>
+                            سرویس ها(
+                            {props.data.ListServiceSchool !== undefined &&
+                                props.data.ListServiceSchool.length}
+                            )
+                        </h6>
                         <div className="tabs">
                             <button>
                                 <svg
@@ -2017,125 +2058,149 @@ const SchoolInfo = (props) => {
                                 <th>نام راننده</th>
                                 <th>خودرو</th>
                                 <th>زمان </th>
-                                <th>دانش آموزان</th>
                                 <th>وضعیت</th>
                                 <th>عملیات</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {/* {props.data.ServiceDriver !== undefined && 
-                                props.data.ServiceDriver.map(item=> {
-                                    return(
+                            {props.data.ListServiceSchool !== undefined &&
+                                props.data.ListServiceSchool.map((item) => {
+                                    return (
                                         <tr>
-                                        <td>
-                                            <div className="img-div">
-                                                <img
-                                                    src="/images/pm.png"
-                                                    alt=""
-                                                    width={50}
-                                                    height={50}
-                                                />
-                                                <div>
-                                                    <span className="span-1">
-                                                        دبیرستان دخترانه فرزانگان
-                                                    </span>
-                                                    <span className="span-2">
-                                                        دخترانه دوره اول
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="img-div">
-                                                <div>
-                                                    <span className="span-1">
-                                                        رفت − 08:00
-                                                    </span>
-                                                    <span className="span-2">
-                                                        سواری شخصی
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="images">
-                                                <div className="img-abs red img-1">
-                                                    A
-                                                </div>
-                                                <div className="img-abs img-2">
-                                                    S
-                                                </div>
-                                                <div className="img-abs img-3 red">
-                                                    P
-                                                </div>
-                                                <div className="img-abs img-4">
-                                                    R
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span className="blue">1401/04/12</span>
-                                        </td>
-                                        <td>
-                                            <div className="status">
-                                                در انتظار تایید مدرسه
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="flex-btns">
-                                                <svg
-                                                    width="33"
-                                                    height="32"
-                                                    viewBox="0 0 33 32"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <rect
-                                                        x="0.93457"
-                                                        width="32"
-                                                        height="32"
-                                                        rx="6"
-                                                        fill="#F3F6F9"
+                                            <td>
+                                                <div className="img-div">
+                                                    <img
+                                                        src="/images/pm.png"
+                                                        alt=""
+                                                        width={50}
+                                                        height={50}
                                                     />
-                                                    <path
-                                                        d="M12.4346 13V22C12.4346 22.8284 13.1061 23.5 13.9346 23.5H19.9346C20.763 23.5 21.4346 22.8284 21.4346 22V13H12.4346Z"
-                                                        fill="#3699FF"
-                                                    />
-                                                    <path
-                                                        opacity="0.3"
-                                                        fill-rule="evenodd"
-                                                        clip-rule="evenodd"
-                                                        d="M18.4346 10.375V10.25C18.4346 9.69772 17.9869 9.25 17.4346 9.25H16.4346C15.8823 9.25 15.4346 9.69772 15.4346 10.25V10.375H12.1846C11.9084 10.375 11.6846 10.5989 11.6846 10.875V11C11.6846 11.2761 11.9084 11.5 12.1846 11.5H21.6846C21.9607 11.5 22.1846 11.2761 22.1846 11V10.875C22.1846 10.5989 21.9607 10.375 21.6846 10.375H18.4346Z"
-                                                        fill="#3699FF"
-                                                    />
-                                                </svg>
-    
-                                                <button
-                                                    onClick={() => {
-                                                        setShowCom(true);
-                                                    }}
-                                                >
-                                                    مشاهده و ویرایش
+                                                    <div>
+                                                        <span className="span-1">
+                                                            {item.driver_name}{" "}
+                                                            {item.driver_l_name}
+                                                        </span>
+                                                        <span className="span-2">
+                                                            {item.driver_phone}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="img-div">
+                                                    <div>
+                                                        <span className="span-1">
+                                                            {
+                                                                item.driver_car_name
+                                                            }
+                                                            -
+                                                            {
+                                                                item.driver_car_color
+                                                            }
+                                                        </span>
+                                                        <span className="span-2">
+                                                            سواری شخصی
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="img-div">
+                                                    <div>
+                                                        <span className="span-1">
+                                                            رفت −{" "}
+                                                            {item.service_time}
+                                                        </span>
+                                                        <span className="span-2">
+                                                            سواری شخصی
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <td>
+                                                    {item.service_status ==
+                                                    "ok" ? (
+                                                        <div className="status bg-green">
+                                                            تایید مدرسه
+                                                        </div>
+                                                    ) : item.service_status ==
+                                                      "reject" ? (
+                                                        <div className="status bg-red">
+                                                            رد شده
+                                                        </div>
+                                                    ) : item.service_status ==
+                                                      "rejectschool" ? (
+                                                        <div className="status bg-red">
+                                                            رد توسط مدرسه
+                                                        </div>
+                                                    ) : item.service_status ==
+                                                      "rejectinstitue" ? (
+                                                        <div className="status bg-red">
+                                                            رد توسط موسسه
+                                                        </div>
+                                                    ) : (
+                                                        <div className="status">
+                                                            در انتظار تایید
+                                                            مدرسه
+                                                        </div>
+                                                    )}
+                                                </td>
+                                            </td>
+                                            <td>
+                                                <div className="flex-btns">
                                                     <svg
-                                                        width="7"
-                                                        height="12"
-                                                        viewBox="0 0 7 12"
+                                                        width="33"
+                                                        height="32"
+                                                        viewBox="0 0 33 32"
                                                         fill="none"
                                                         xmlns="http://www.w3.org/2000/svg"
                                                     >
+                                                        <rect
+                                                            x="0.93457"
+                                                            width="32"
+                                                            height="32"
+                                                            rx="6"
+                                                            fill="#F3F6F9"
+                                                        />
                                                         <path
-                                                            d="M6.38726 1.65656C6.70769 1.33613 6.70769 0.816613 6.38726 0.496183C6.06683 0.175752 5.54731 0.175752 5.22688 0.496182L0.3038 5.41926C-0.00682905 5.72989 -0.0176973 6.23006 0.279145 6.55389L4.79196 11.477C5.09817 11.811 5.6172 11.8336 5.95125 11.5274C6.2853 11.2212 6.30786 10.7021 6.00165 10.3681L2.01969 6.02413L6.38726 1.65656Z"
+                                                            d="M12.4346 13V22C12.4346 22.8284 13.1061 23.5 13.9346 23.5H19.9346C20.763 23.5 21.4346 22.8284 21.4346 22V13H12.4346Z"
+                                                            fill="#3699FF"
+                                                        />
+                                                        <path
+                                                            opacity="0.3"
+                                                            fill-rule="evenodd"
+                                                            clip-rule="evenodd"
+                                                            d="M18.4346 10.375V10.25C18.4346 9.69772 17.9869 9.25 17.4346 9.25H16.4346C15.8823 9.25 15.4346 9.69772 15.4346 10.25V10.375H12.1846C11.9084 10.375 11.6846 10.5989 11.6846 10.875V11C11.6846 11.2761 11.9084 11.5 12.1846 11.5H21.6846C21.9607 11.5 22.1846 11.2761 22.1846 11V10.875C22.1846 10.5989 21.9607 10.375 21.6846 10.375H18.4346Z"
                                                             fill="#3699FF"
                                                         />
                                                     </svg>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    )
-                                }
-                            )} */}
-                            <tr>
+
+                                                    <button
+                                                        onClick={() => {
+                                                            setShowCom(true);
+                                                        }}
+                                                    >
+                                                        مشاهده و ویرایش
+                                                        <svg
+                                                            width="7"
+                                                            height="12"
+                                                            viewBox="0 0 7 12"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <path
+                                                                d="M6.38726 1.65656C6.70769 1.33613 6.70769 0.816613 6.38726 0.496183C6.06683 0.175752 5.54731 0.175752 5.22688 0.496182L0.3038 5.41926C-0.00682905 5.72989 -0.0176973 6.23006 0.279145 6.55389L4.79196 11.477C5.09817 11.811 5.6172 11.8336 5.95125 11.5274C6.2853 11.2212 6.30786 10.7021 6.00165 10.3681L2.01969 6.02413L6.38726 1.65656Z"
+                                                                fill="#3699FF"
+                                                            />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            {/* <tr>
                                 <td>
                                     <div className="img-div">
                                         <img
@@ -2245,7 +2310,7 @@ const SchoolInfo = (props) => {
                                         </button>
                                     </div>
                                 </td>
-                            </tr>
+                            </tr> */}
                         </tbody>
                     </table>
                 </TableDiv>
@@ -2755,7 +2820,18 @@ const SchoolInfo = (props) => {
                 <Travels>
                     <div className="head">
                         <div className="right-head">
-                            <h6>تراکنش‌ها(10)</h6>
+                            <h6>
+                                تراکنش‌ها(
+                                {props.data.TransactionCashAtInstitution !==
+                                    undefined &&
+                                    props.data.TransactionCheckAtInstitution !==
+                                        undefined &&
+                                    props.data.TransactionCashAtInstitution
+                                        .length +
+                                        props.data.TransactionCheckAtInstitution
+                                            .length}
+                                )
+                            </h6>
                         </div>
                         <div className=" travel-btns">
                             <button>
@@ -2858,7 +2934,12 @@ const SchoolInfo = (props) => {
                                 </svg>
                                 پرینت
                             </button>
-                            <button className="active">
+                            <button
+                                className="active"
+                                onClick={() => {
+                                    setShowNewCheck(true);
+                                }}
+                            >
                                 <svg
                                     width="15"
                                     height="15"
@@ -2909,19 +2990,118 @@ const SchoolInfo = (props) => {
                                                         {item.payment_method}
                                                     </td>
                                                     <td>
-                                                        {item.check_amount} ریال
+                                                        {item.check_amount
+                                                            .toString()
+                                                            .replace(
+                                                                /\B(?=(\d{3})+(?!\d))/g,
+                                                                ","
+                                                            )}{" "}
+                                                        ریال
                                                     </td>
                                                     <td>
                                                         {item.delivery_date}
                                                     </td>
                                                     <td>{item.fo_cash}</td>
                                                     <td>
-                                                        <div className="status">
-                                                            در انتظار وصول
-                                                        </div>
+                                                        {item.status_cash ==
+                                                        "waiting" ? (
+                                                            <div className="status">
+                                                                در انتظار تایید
+                                                            </div>
+                                                        ) : item.status_cash ==
+                                                          "ok" ? (
+                                                            <div className="status green">
+                                                                موفق
+                                                            </div>
+                                                        ) : (
+                                                            <div className="status red">
+                                                                ناموفق
+                                                            </div>
+                                                        )}
                                                     </td>
                                                     <td>
-                                                        <button className="w-120">
+                                                        <button
+                                                            className="w-120"
+                                                            onClick={() => {
+                                                                setCashItem(
+                                                                    item
+                                                                );
+                                                                setShowCashDet(
+                                                                    true
+                                                                );
+                                                            }}
+                                                        >
+                                                            مشاهده و ویرایش
+                                                            <svg
+                                                                width="7"
+                                                                height="12"
+                                                                viewBox="0 0 7 12"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <path
+                                                                    d="M6.38726 1.65656C6.70769 1.33613 6.70769 0.816613 6.38726 0.496183C6.06683 0.175752 5.54731 0.175752 5.22688 0.496182L0.3038 5.41926C-0.00682905 5.72989 -0.0176973 6.23006 0.279145 6.55389L4.79196 11.477C5.09817 11.811 5.6172 11.8336 5.95125 11.5274C6.2853 11.2212 6.30786 10.7021 6.00165 10.3681L2.01969 6.02413L6.38726 1.65656Z"
+                                                                    fill="#3699FF"
+                                                                />
+                                                            </svg>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        }
+                                    )}
+                                {props.data.TransactionCheckAtInstitution !==
+                                    undefined &&
+                                    props.data.TransactionCheckAtInstitution.map(
+                                        (item) => {
+                                            return (
+                                                <tr>
+                                                    <td>
+                                                        {item.type_transaction}
+                                                    </td>
+                                                    <td>
+                                                        {item.payment_method}
+                                                    </td>
+                                                    <td>
+                                                        {item.check_amount
+                                                            .toString()
+                                                            .replace(
+                                                                /\B(?=(\d{3})+(?!\d))/g,
+                                                                ","
+                                                            )}{" "}
+                                                        ریال
+                                                    </td>
+                                                    <td>
+                                                        {item.delivery_date}
+                                                    </td>
+                                                    <td>{item.fo_check}</td>
+                                                    <td>
+                                                        {item.status_check ==
+                                                        "waiting" ? (
+                                                            <div className="status">
+                                                                در انتظار وصول
+                                                            </div>
+                                                        ) : item.status_check ==
+                                                          "ok" ? (
+                                                            <div className="status green">
+                                                                وصول شده
+                                                            </div>
+                                                        ) : (
+                                                            <div className="status red">
+                                                                برگشت خورده
+                                                            </div>
+                                                        )}
+                                                    </td>
+                                                    <td>
+                                                        <button
+                                                            className="w-120"
+                                                            onClick={() => {
+                                                                setItem(item);
+                                                                setShowDet(
+                                                                    true
+                                                                );
+                                                            }}
+                                                        >
                                                             مشاهده و ویرایش
                                                             <svg
                                                                 width="7"
@@ -2943,6 +3123,21 @@ const SchoolInfo = (props) => {
                                     )}
                             </tbody>
                         </table>
+                        {showDet && (
+                            <CheckInfo item={item} close={setShowDet} />
+                        )}
+                        {showCashDet && (
+                            <CashInfo item={cashItem} close={setShowCashDet} />
+                        )}
+                        <div className="all">
+                            <h6>جمع کل (89) :</h6>
+                            <span>
+                                {all
+                                    .toString()
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{" "}
+                                ریال
+                            </span>
+                        </div>
                     </TableDiv>
                 </Travels>
             ) : activeTab === 6 ? (
@@ -3009,7 +3204,7 @@ const SchoolInfo = (props) => {
                         <div className="send-div">
                             <div className="d-flex">
                                 <label>
-                                    <input type="checkbox"  />
+                                    <input type="checkbox" />
                                     نرم افزار
                                 </label>
                                 <label>
@@ -3229,117 +3424,80 @@ const SchoolInfo = (props) => {
                                     </tr>
                                 </thead>
                                 <tbody className="new-td">
-                                    {/* {props.data.TransactionCashAtInstitution !==
-                                    undefined &&
-                                    props.data.TransactionCashAtInstitution.map(
-                                        (item) => {
-                                            return (
-                                                <tr>
-                                                    <td>
-                                                        {item.type_transaction}
-                                                    </td>
-                                                    <td>
-                                                        {item.payment_method}
-                                                    </td>
-                                                    <td>
-                                                        {item.check_amount} ریال
-                                                    </td>
-                                                    <td>
-                                                        {item.delivery_date}
-                                                    </td>
-                                                    <td>{item.fo_cash}</td>
-                                                    <td>
-                                                        <div className="status">
-                                                            در انتظار وصول
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <button className="w-120">
-                                                            مشاهده و ویرایش
-                                                            <svg
-                                                                width="7"
-                                                                height="12"
-                                                                viewBox="0 0 7 12"
-                                                                fill="none"
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                            >
-                                                                <path
-                                                                    d="M6.38726 1.65656C6.70769 1.33613 6.70769 0.816613 6.38726 0.496183C6.06683 0.175752 5.54731 0.175752 5.22688 0.496182L0.3038 5.41926C-0.00682905 5.72989 -0.0176973 6.23006 0.279145 6.55389L4.79196 11.477C5.09817 11.811 5.6172 11.8336 5.95125 11.5274C6.2853 11.2212 6.30786 10.7021 6.00165 10.3681L2.01969 6.02413L6.38726 1.65656Z"
-                                                                    fill="#3699FF"
-                                                                />
-                                                            </svg>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        }
-                                    )} */}
-                                    <tr>
-                                        <td>
-                                            <div className="d-flex">
-                                                از
-                                                <span className="span-1">
-                                                    0 km
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="d-flex">
-                                                تا
-                                                <span className="span-1">
-                                                    5 km
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td>رفت و برگشت</td>
-                                        <td>5,000,00 ریال</td>
-                                        <td>
-                                            <div className="d-flex">
-                                                <button className="w-90 ms-2">
-                                                    ویرایش
-                                                    <svg
-                                                        width="17"
-                                                        height="16"
-                                                        viewBox="0 0 17 16"
-                                                        fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                    >
-                                                        <path
-                                                            d="M14.4474 2.98564C15.0248 3.56304 15.0343 4.49625 14.4687 5.08524L9.05181 10.7263C8.77652 11.013 8.3987 11.1787 8.00133 11.1871L5.72601 11.2348L5.77406 8.94424C5.78221 8.5559 5.94068 8.18587 6.21612 7.91201L11.7531 2.40661C12.3394 1.82369 13.2868 1.82505 13.8714 2.40965L14.4474 2.98564Z"
-                                                            fill="#3699FF"
-                                                        />
-                                                        <path
-                                                            opacity="0.3"
-                                                            d="M8.90924 1.33398C9.27743 1.33398 9.57591 1.63246 9.57591 2.00065C9.57591 2.36884 9.27743 2.66732 8.90924 2.66732H4.30924C3.57287 2.66732 2.97591 3.26427 2.97591 4.00065V12.0007C2.97591 12.737 3.57287 13.334 4.30924 13.334H12.3092C13.0456 13.334 13.6426 12.737 13.6426 12.0007V8.66732C13.6426 8.29913 13.9411 8.00065 14.3092 8.00065C14.6774 8.00065 14.9759 8.29913 14.9759 8.66732V12.0007C14.9759 13.4734 13.782 14.6673 12.3092 14.6673H4.30924C2.83649 14.6673 1.64258 13.4734 1.64258 12.0007V4.00065C1.64258 2.52789 2.83649 1.33398 4.30924 1.33398H8.90924Z"
-                                                            fill="#3699FF"
-                                                        />
-                                                    </svg>
-                                                </button>
-                                                <button className="w-80 ">
-                                                    حذف
-                                                    <svg
-                                                        width="19"
-                                                        height="18"
-                                                        viewBox="0 0 19 18"
-                                                        fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                    >
-                                                        <path
-                                                            d="M4.80957 6V15C4.80957 15.8284 5.48114 16.5 6.30957 16.5H12.3096C13.138 16.5 13.8096 15.8284 13.8096 15V6H4.80957Z"
-                                                            fill="#3699FF"
-                                                        />
-                                                        <path
-                                                            opacity="0.3"
-                                                            fill-rule="evenodd"
-                                                            clip-rule="evenodd"
-                                                            d="M10.8096 3.375V3.25C10.8096 2.69772 10.3619 2.25 9.80957 2.25H8.80957C8.25729 2.25 7.80957 2.69772 7.80957 3.25V3.375H4.55957C4.28343 3.375 4.05957 3.59886 4.05957 3.875V4C4.05957 4.27614 4.28343 4.5 4.55957 4.5H14.0596C14.3357 4.5 14.5596 4.27614 14.5596 4V3.875C14.5596 3.59886 14.3357 3.375 14.0596 3.375H10.8096Z"
-                                                            fill="#3699FF"
-                                                        />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    {props.data.TariffFromInstituteForSchool !==
+                                        undefined &&
+                                        props.data.TariffFromInstituteForSchool.map(
+                                            (item) => {
+                                                return (
+                                                    <tr>
+                                                        <td>
+                                                            <div className="d-flex">
+                                                                از
+                                                                <span className="span-1">
+                                                                    {item.start_km} km
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className="d-flex">
+                                                                تا
+                                                                <span className="span-1">
+                                                                    {item.end_km} km
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td>رفت و برگشت</td>
+                                                        <td>{item.amount} ریال</td>
+                                                        <td>
+                                                            <div className="d-flex">
+                                                                <button className="w-90 ms-2">
+                                                                    ویرایش
+                                                                    <svg
+                                                                        width="17"
+                                                                        height="16"
+                                                                        viewBox="0 0 17 16"
+                                                                        fill="none"
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                    >
+                                                                        <path
+                                                                            d="M14.4474 2.98564C15.0248 3.56304 15.0343 4.49625 14.4687 5.08524L9.05181 10.7263C8.77652 11.013 8.3987 11.1787 8.00133 11.1871L5.72601 11.2348L5.77406 8.94424C5.78221 8.5559 5.94068 8.18587 6.21612 7.91201L11.7531 2.40661C12.3394 1.82369 13.2868 1.82505 13.8714 2.40965L14.4474 2.98564Z"
+                                                                            fill="#3699FF"
+                                                                        />
+                                                                        <path
+                                                                            opacity="0.3"
+                                                                            d="M8.90924 1.33398C9.27743 1.33398 9.57591 1.63246 9.57591 2.00065C9.57591 2.36884 9.27743 2.66732 8.90924 2.66732H4.30924C3.57287 2.66732 2.97591 3.26427 2.97591 4.00065V12.0007C2.97591 12.737 3.57287 13.334 4.30924 13.334H12.3092C13.0456 13.334 13.6426 12.737 13.6426 12.0007V8.66732C13.6426 8.29913 13.9411 8.00065 14.3092 8.00065C14.6774 8.00065 14.9759 8.29913 14.9759 8.66732V12.0007C14.9759 13.4734 13.782 14.6673 12.3092 14.6673H4.30924C2.83649 14.6673 1.64258 13.4734 1.64258 12.0007V4.00065C1.64258 2.52789 2.83649 1.33398 4.30924 1.33398H8.90924Z"
+                                                                            fill="#3699FF"
+                                                                        />
+                                                                    </svg>
+                                                                </button>
+                                                                <button className="w-80 ">
+                                                                    حذف
+                                                                    <svg
+                                                                        width="19"
+                                                                        height="18"
+                                                                        viewBox="0 0 19 18"
+                                                                        fill="none"
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                    >
+                                                                        <path
+                                                                            d="M4.80957 6V15C4.80957 15.8284 5.48114 16.5 6.30957 16.5H12.3096C13.138 16.5 13.8096 15.8284 13.8096 15V6H4.80957Z"
+                                                                            fill="#3699FF"
+                                                                        />
+                                                                        <path
+                                                                            opacity="0.3"
+                                                                            fill-rule="evenodd"
+                                                                            clip-rule="evenodd"
+                                                                            d="M10.8096 3.375V3.25C10.8096 2.69772 10.3619 2.25 9.80957 2.25H8.80957C8.25729 2.25 7.80957 2.69772 7.80957 3.25V3.375H4.55957C4.28343 3.375 4.05957 3.59886 4.05957 3.875V4C4.05957 4.27614 4.28343 4.5 4.55957 4.5H14.0596C14.3357 4.5 14.5596 4.27614 14.5596 4V3.875C14.5596 3.59886 14.3357 3.375 14.0596 3.375H10.8096Z"
+                                                                            fill="#3699FF"
+                                                                        />
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            }
+                                        )}
                                 </tbody>
                             </table>
                         </TableDiv>

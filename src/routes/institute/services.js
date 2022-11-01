@@ -330,7 +330,8 @@ export default function Services() {
             .then((res) => {
                 setInfo(res.data.InstitutionManageCurrentDetails);
                 let config = {
-                    url: `${BASE_URL}getdetilse-service/institution{}?id_institution=${res.data.InstitutionManageCurrentDetails.id}`,
+                    // url: `${BASE_URL}getdetilse-service/institution{}?id_institution=${res.data.InstitutionManageCurrentDetails.id}`,
+                    url: `${BASE_URL}getdetilse-service/institution{}?id_institution=6`,
                     method: "GET",
                 };
                 axios(config)
@@ -653,7 +654,12 @@ export default function Services() {
 
                             <TableDiv>
                                 <div className="head">
-                                    <h6>سرویس ها(10)</h6>
+                                    <h6>
+                                        سرویس ها(
+                                        {driversList !== undefined &&
+                                            driversList.length}
+                                        )
+                                    </h6>
                                     <div className="tabs">
                                         <span
                                             className={
@@ -753,7 +759,6 @@ export default function Services() {
                                             <th>خودرو</th>
                                             <th>نام مدرسه</th>
                                             <th>زمان</th>
-                                            <th>دانش آموزان</th>
                                             <th>وضعیت</th>
                                             <th>عملیات</th>
                                         </tr>
@@ -824,22 +829,6 @@ export default function Services() {
                                                             <span className="span-2">
                                                                 {/* سرویس رفت */}
                                                             </span>
-                                                        </td>
-                                                        <td>
-                                                            <div className="images">
-                                                                <div className="img-abs red img-1">
-                                                                    A
-                                                                </div>
-                                                                <div className="img-abs img-2">
-                                                                    S
-                                                                </div>
-                                                                <div className="img-abs img-3 red">
-                                                                    P
-                                                                </div>
-                                                                <div className="img-abs img-4">
-                                                                    R
-                                                                </div>
-                                                            </div>
                                                         </td>
                                                         <td>
                                                             {item.service_status ==

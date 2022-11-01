@@ -289,7 +289,8 @@ export default function Students() {
             .then((res) => {
                 setInfo(res.data.InstitutionManageCurrentDetails);
                 let config = {
-                    url: `${BASE_URL}get-list-student-active-at-service/institution{}?id_institution=${res.data.InstitutionManageCurrentDetails.id}`,
+                    // url: `${BASE_URL}get-list-student-active-at-service/institution{}?id_institution=${res.data.InstitutionManageCurrentDetails.id}`,
+                    url: `${BASE_URL}get-list-student-active-at-service/institution{}?id_institution=6`,
                     method: "GET",
                 };
                 axios(config)

@@ -13,7 +13,7 @@ import MsgComponent from "../../components/MsgComponent";
 import AddDriver from "../../components/Institute/AddDriver";
 import { toast, ToastContainer } from "react-toastify";
 
-const Main = styled.div`
+const Main = styled.div` 
     background: #e5e5e5;
     display: flex;
     .table-check {

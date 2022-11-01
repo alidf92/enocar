@@ -15,7 +15,7 @@ import ServiceInfo from "./ServiceInfo";
 import DriverServiceInfo from "./DriverServiceInfo";
 import CheckInfo from "./CheckInfo";
 import NewCheck from "./NewCheck";
-import CashInfo from "./CashInfo";
+import CashInfo from "./CashInfo"; 
 import TravelInfo from "./TravelInfo";
 
 const Main = styled.div`
@@ -932,7 +932,6 @@ const DeleteModal = styled.div`
 const DriverInfo = (props) => {
     const [activeTab, setActiveTab] = useState(1);
     const [toFull, setToFull] = useState(false);
-    console.log(props.data);
     const [name, setName] = useState("");
 
     const [lastName, setLastName] = useState("");
@@ -1093,18 +1092,15 @@ const DriverInfo = (props) => {
         setEndDate(vals.toDate());
     }
 
-    console.log(props.services);
     let all = 0;
 
     props.data.TransactionCashForDriver !== undefined &&
         props.data.TransactionCashForDriver.map((item) => {
             all += Number(item.check_amount);
-            console.log(all);
         });
     props.data.TransactionCheckForDriver !== undefined &&
         props.data.TransactionCheckForDriver.map((item) => {
             all += Number(item.check_amount);
-            console.log(all);
         });
     //
 
@@ -1116,7 +1112,6 @@ const DriverInfo = (props) => {
     const [item, setItem] = useState([]);
     const [cashItem, setCashItem] = useState([]);
     const [itemToDelete, setItemToDelete] = useState();
-    console.log(itemToDelete);
     const removeServiceHandler = () => {
         let data = new FormData();
         data.append("service_id", itemToDelete);
@@ -1140,7 +1135,6 @@ const DriverInfo = (props) => {
         });
     };
 
-    console.log(props.data.ServiceDriver);
     const [serviceDet, setServiceDet] = useState([]);
     const [deleteModal, setDeleteModal] = useState(false);
     const [showTravel, setShowTravel] = useState(false);
@@ -2109,7 +2103,6 @@ const DriverInfo = (props) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {console.log(props.data)}
                                     {props.data !== undefined &&
                                         props.data.ServiceDriver !==
                                             undefined &&

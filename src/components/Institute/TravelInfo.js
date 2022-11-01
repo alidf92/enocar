@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { BASE_URL } from "../BaseUrl";
 import StudentsInfo from "./StudentsInfo";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Detail = styled.div`
     background-color: #fff;
@@ -132,6 +134,14 @@ const TableDiv = styled.div`
     background: #ffffff;
     border-radius: 12px;
     margin-top: 20px;
+    .bg-red {
+        background: #fff5f8 !important;
+        color: #f1416c !important;
+    }
+    .bg-green {
+        background: #e8fff3 !important;
+        color: #50cd89 !important;
+    }
     .amount-span {
         font-weight: 600;
         font-size: 14px;
@@ -709,6 +719,93 @@ const TravelInfo = (props) => {
             .catch((error) => {});
         //
     }, []);
+
+    const [isNew, setIsNew] = useState(false);
+    const [selectedDriverId, setSelectedDriverId] = useState();
+
+    //
+
+    const [driverName, setDriverName] = useState("");
+    const [driverLastName, setDriverLastName] = useState("");
+    const [driverPhone, setDriverPhone] = useState("");
+    const [driverNationalCode, setDriverNationalCode] = useState("");
+    const [carModel, setCarModel] = useState("");
+    const [carColor, setCarColor] = useState("");
+    const [plates, setPlates] = useState("");
+
+    const existDriverSubmit = (e) => {
+        let data = new FormData();
+        data.append("service_id", props.item.trip_id);
+        data.append("driver_id", selectedDriverId);
+        let config = {
+            method: "POST",
+            url: `${BASE_URL}alternative-service`,
+            data: data,
+        };
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            })
+            .catch((err) => {
+                toast.error(err.response.data.message, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            });
+    };
+    const newDriverSubmit = (e) => {
+        let data = new FormData();
+        data.append("service_id", props.item.trip_id);
+        data.append("name", driverName);
+        data.append("l_name", driverLastName);
+        data.append("phone_number", driverPhone);
+        data.append("national_code", driverNationalCode);
+        data.append("model", carModel);
+        data.append("color", carColor);
+        data.append("number_plates", plates);
+        let config = {
+            method: "POST",
+            url: `${BASE_URL}alternative-service-and-make/driver`,
+            data: data,
+        };
+        axios(config)
+            .then((response) => {
+                toast.success(response.data.message, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            })
+            .catch((err) => {
+                toast.error(err.response.data, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            });
+    };
+
     return (
         <>
             {!showStudentInfo ? (
@@ -961,9 +1058,9 @@ const TravelInfo = (props) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {tripInfo.ListStudentAbsentTrip !==
+                                        {tripInfo.ListStudentTrip !==
                                             undefined &&
-                                            tripInfo.ListStudentAbsentTrip.map(
+                                            tripInfo.ListStudentTrip.map(
                                                 (item) => {
                                                     return (
                                                         <tr>
@@ -999,13 +1096,19 @@ const TravelInfo = (props) => {
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <div className="status">
-                                                                    در انتظار
-                                                                    سرویس
-                                                                </div>
+                                                                {item.Status_student_service ==
+                                                                "present" ? (
+                                                                    <div className="status bg-green">
+                                                                        حاضر
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="status bg-red">
+                                                                        غایب
+                                                                    </div>
+                                                                )}
                                                             </td>
                                                             <td></td>
-                                                             <td>
+                                                            <td>
                                                                 <button
                                                                     className="prof-btn"
                                                                     onClick={() => {
@@ -1150,8 +1253,8 @@ const TravelInfo = (props) => {
                                         </svg>
                                     </div>
                                 </div>
-                                {tripInfo.EventTrip !== undefined &&
-                                    tripInfo.EventTrip.map((item) => {
+                                {tripInfo.TripEvent !== undefined &&
+                                    tripInfo.TripEvent.map((item) => {
                                         return (
                                             <div className="event">
                                                 <div className="right">
@@ -1251,451 +1354,6 @@ const TravelInfo = (props) => {
                                             </div>
                                         );
                                     })}
-
-                                {/* <div className="event">
-                            <div className="right">
-                                <div className="d-flex flex-column align-items-center">
-                                    <div>
-                                        <svg
-                                            width="36"
-                                            height="37"
-                                            viewBox="0 0 36 37"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                y="0.441406"
-                                                width="36"
-                                                height="36"
-                                                rx="18"
-                                                fill="#EFF2F5"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                d="M18.0002 17.7747C16.5274 17.7747 15.3335 16.5808 15.3335 15.1081C15.3335 13.6353 16.5274 12.4414 18.0002 12.4414C19.4729 12.4414 20.6668 13.6353 20.6668 15.1081C20.6668 16.5808 19.4729 17.7747 18.0002 17.7747Z"
-                                                fill="#7E8299"
-                                            />
-                                            <path
-                                                d="M12.0004 23.9079C12.2588 20.7261 14.8413 19.1084 17.9889 19.1084C21.1808 19.1084 23.8033 20.6372 23.9986 23.9084C24.0064 24.0387 23.9986 24.4417 23.4978 24.4417C21.0274 24.4417 17.3565 24.4417 12.485 24.4417C12.3178 24.4417 11.9864 24.0812 12.0004 23.9079Z"
-                                                fill="#7E8299"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <div className="mar-y-4">
-                                        <svg
-                                            width="2"
-                                            height="56"
-                                            viewBox="0 0 2 56"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                x="0.5"
-                                                y="0.941406"
-                                                width="1"
-                                                height="54"
-                                                rx="0.5"
-                                                stroke="#E4E6EF"
-                                                stroke-dasharray="4 4"
-                                            />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span className="span-1">
-                                        پایان سرویس دبیرستان دخترانه فرزانگان
-                                    </span>
-                                    <span className="span-2">
-                                        08:01 توسط{" "}
-                                        <span className="blue">
-                                            حسام الدین طباطبایی
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="left">
-                                <button>مشاهده اطلاعات کاربر</button>
-                                <button>
-                                    مشاهده لوکیشن
-                                    <svg
-                                        width="18"
-                                        height="19"
-                                        viewBox="0 0 18 19"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 2.69141C3.59266 2.69141 2.24951 4.03455 2.24951 5.69141C2.24951 7.34826 3.59266 8.69141 5.24951 8.69141H12.7495C14.4064 8.69141 15.7495 7.34826 15.7495 5.69141C15.7495 4.03455 14.4064 2.69141 12.7495 2.69141H5.24951ZM6.74951 5.6914C6.74951 6.51983 6.07794 7.1914 5.24951 7.1914C4.42109 7.1914 3.74951 6.51983 3.74951 5.6914C3.74951 4.86298 4.42109 4.1914 5.24951 4.1914C6.07794 4.1914 6.74951 4.86298 6.74951 5.6914Z"
-                                            fill="#3699FF"
-                                        />
-                                        <path
-                                            opacity="0.3"
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 10.1914C3.59266 10.1914 2.24951 11.5346 2.24951 13.1914C2.24951 14.8483 3.59266 16.1914 5.24951 16.1914H12.7495C14.4064 16.1914 15.7495 14.8483 15.7495 13.1914C15.7495 11.5346 14.4064 10.1914 12.7495 10.1914H5.24951ZM14.2495 13.1914C14.2495 14.0198 13.5779 14.6914 12.7495 14.6914C11.9211 14.6914 11.2495 14.0198 11.2495 13.1914C11.2495 12.363 11.9211 11.6914 12.7495 11.6914C13.5779 11.6914 14.2495 12.363 14.2495 13.1914Z"
-                                            fill="#3699FF"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="event">
-                            <div className="right">
-                                <div className="d-flex flex-column align-items-center">
-                                    <div>
-                                        <svg
-                                            width="36"
-                                            height="37"
-                                            viewBox="0 0 36 37"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                y="0.441406"
-                                                width="36"
-                                                height="36"
-                                                rx="18"
-                                                fill="#EFF2F5"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                d="M18.0002 17.7747C16.5274 17.7747 15.3335 16.5808 15.3335 15.1081C15.3335 13.6353 16.5274 12.4414 18.0002 12.4414C19.4729 12.4414 20.6668 13.6353 20.6668 15.1081C20.6668 16.5808 19.4729 17.7747 18.0002 17.7747Z"
-                                                fill="#7E8299"
-                                            />
-                                            <path
-                                                d="M12.0004 23.9079C12.2588 20.7261 14.8413 19.1084 17.9889 19.1084C21.1808 19.1084 23.8033 20.6372 23.9986 23.9084C24.0064 24.0387 23.9986 24.4417 23.4978 24.4417C21.0274 24.4417 17.3565 24.4417 12.485 24.4417C12.3178 24.4417 11.9864 24.0812 12.0004 23.9079Z"
-                                                fill="#7E8299"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <div className="mar-y-4">
-                                        <svg
-                                            width="2"
-                                            height="56"
-                                            viewBox="0 0 2 56"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                x="0.5"
-                                                y="0.941406"
-                                                width="1"
-                                                height="54"
-                                                rx="0.5"
-                                                stroke="#E4E6EF"
-                                                stroke-dasharray="4 4"
-                                            />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span className="span-1">
-                                        پایان سرویس دبیرستان دخترانه فرزانگان
-                                    </span>
-                                    <span className="span-2">
-                                        08:01 توسط{" "}
-                                        <span className="blue">
-                                            حسام الدین طباطبایی
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="left">
-                                <button>مشاهده اطلاعات کاربر</button>
-                                <button>
-                                    مشاهده لوکیشن
-                                    <svg
-                                        width="18"
-                                        height="19"
-                                        viewBox="0 0 18 19"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 2.69141C3.59266 2.69141 2.24951 4.03455 2.24951 5.69141C2.24951 7.34826 3.59266 8.69141 5.24951 8.69141H12.7495C14.4064 8.69141 15.7495 7.34826 15.7495 5.69141C15.7495 4.03455 14.4064 2.69141 12.7495 2.69141H5.24951ZM6.74951 5.6914C6.74951 6.51983 6.07794 7.1914 5.24951 7.1914C4.42109 7.1914 3.74951 6.51983 3.74951 5.6914C3.74951 4.86298 4.42109 4.1914 5.24951 4.1914C6.07794 4.1914 6.74951 4.86298 6.74951 5.6914Z"
-                                            fill="#3699FF"
-                                        />
-                                        <path
-                                            opacity="0.3"
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 10.1914C3.59266 10.1914 2.24951 11.5346 2.24951 13.1914C2.24951 14.8483 3.59266 16.1914 5.24951 16.1914H12.7495C14.4064 16.1914 15.7495 14.8483 15.7495 13.1914C15.7495 11.5346 14.4064 10.1914 12.7495 10.1914H5.24951ZM14.2495 13.1914C14.2495 14.0198 13.5779 14.6914 12.7495 14.6914C11.9211 14.6914 11.2495 14.0198 11.2495 13.1914C11.2495 12.363 11.9211 11.6914 12.7495 11.6914C13.5779 11.6914 14.2495 12.363 14.2495 13.1914Z"
-                                            fill="#3699FF"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="event">
-                            <div className="right">
-                                <div className="d-flex flex-column align-items-center">
-                                    <div>
-                                        <svg
-                                            width="36"
-                                            height="37"
-                                            viewBox="0 0 36 37"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                y="0.441406"
-                                                width="36"
-                                                height="36"
-                                                rx="18"
-                                                fill="#EFF2F5"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                d="M18.0002 17.7747C16.5274 17.7747 15.3335 16.5808 15.3335 15.1081C15.3335 13.6353 16.5274 12.4414 18.0002 12.4414C19.4729 12.4414 20.6668 13.6353 20.6668 15.1081C20.6668 16.5808 19.4729 17.7747 18.0002 17.7747Z"
-                                                fill="#7E8299"
-                                            />
-                                            <path
-                                                d="M12.0004 23.9079C12.2588 20.7261 14.8413 19.1084 17.9889 19.1084C21.1808 19.1084 23.8033 20.6372 23.9986 23.9084C24.0064 24.0387 23.9986 24.4417 23.4978 24.4417C21.0274 24.4417 17.3565 24.4417 12.485 24.4417C12.3178 24.4417 11.9864 24.0812 12.0004 23.9079Z"
-                                                fill="#7E8299"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <div className="mar-y-4">
-                                        <svg
-                                            width="2"
-                                            height="56"
-                                            viewBox="0 0 2 56"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                x="0.5"
-                                                y="0.941406"
-                                                width="1"
-                                                height="54"
-                                                rx="0.5"
-                                                stroke="#E4E6EF"
-                                                stroke-dasharray="4 4"
-                                            />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span className="span-1">
-                                        پایان سرویس دبیرستان دخترانه فرزانگان
-                                    </span>
-                                    <span className="span-2">
-                                        08:01 توسط{" "}
-                                        <span className="blue">
-                                            حسام الدین طباطبایی
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="left">
-                                <button>مشاهده اطلاعات کاربر</button>
-                                <button>
-                                    مشاهده لوکیشن
-                                    <svg
-                                        width="18"
-                                        height="19"
-                                        viewBox="0 0 18 19"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 2.69141C3.59266 2.69141 2.24951 4.03455 2.24951 5.69141C2.24951 7.34826 3.59266 8.69141 5.24951 8.69141H12.7495C14.4064 8.69141 15.7495 7.34826 15.7495 5.69141C15.7495 4.03455 14.4064 2.69141 12.7495 2.69141H5.24951ZM6.74951 5.6914C6.74951 6.51983 6.07794 7.1914 5.24951 7.1914C4.42109 7.1914 3.74951 6.51983 3.74951 5.6914C3.74951 4.86298 4.42109 4.1914 5.24951 4.1914C6.07794 4.1914 6.74951 4.86298 6.74951 5.6914Z"
-                                            fill="#3699FF"
-                                        />
-                                        <path
-                                            opacity="0.3"
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 10.1914C3.59266 10.1914 2.24951 11.5346 2.24951 13.1914C2.24951 14.8483 3.59266 16.1914 5.24951 16.1914H12.7495C14.4064 16.1914 15.7495 14.8483 15.7495 13.1914C15.7495 11.5346 14.4064 10.1914 12.7495 10.1914H5.24951ZM14.2495 13.1914C14.2495 14.0198 13.5779 14.6914 12.7495 14.6914C11.9211 14.6914 11.2495 14.0198 11.2495 13.1914C11.2495 12.363 11.9211 11.6914 12.7495 11.6914C13.5779 11.6914 14.2495 12.363 14.2495 13.1914Z"
-                                            fill="#3699FF"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="event">
-                            <div className="right">
-                                <div className="d-flex flex-column align-items-center">
-                                    <div>
-                                        <svg
-                                            width="36"
-                                            height="37"
-                                            viewBox="0 0 36 37"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                y="0.441406"
-                                                width="36"
-                                                height="36"
-                                                rx="18"
-                                                fill="#EFF2F5"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                d="M18.0002 17.7747C16.5274 17.7747 15.3335 16.5808 15.3335 15.1081C15.3335 13.6353 16.5274 12.4414 18.0002 12.4414C19.4729 12.4414 20.6668 13.6353 20.6668 15.1081C20.6668 16.5808 19.4729 17.7747 18.0002 17.7747Z"
-                                                fill="#7E8299"
-                                            />
-                                            <path
-                                                d="M12.0004 23.9079C12.2588 20.7261 14.8413 19.1084 17.9889 19.1084C21.1808 19.1084 23.8033 20.6372 23.9986 23.9084C24.0064 24.0387 23.9986 24.4417 23.4978 24.4417C21.0274 24.4417 17.3565 24.4417 12.485 24.4417C12.3178 24.4417 11.9864 24.0812 12.0004 23.9079Z"
-                                                fill="#7E8299"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <div className="mar-y-4">
-                                        <svg
-                                            width="2"
-                                            height="56"
-                                            viewBox="0 0 2 56"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                x="0.5"
-                                                y="0.941406"
-                                                width="1"
-                                                height="54"
-                                                rx="0.5"
-                                                stroke="#E4E6EF"
-                                                stroke-dasharray="4 4"
-                                            />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span className="span-1">
-                                        پایان سرویس دبیرستان دخترانه فرزانگان
-                                    </span>
-                                    <span className="span-2">
-                                        08:01 توسط{" "}
-                                        <span className="blue">
-                                            حسام الدین طباطبایی
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="left">
-                                <button>مشاهده اطلاعات کاربر</button>
-                                <button>
-                                    مشاهده لوکیشن
-                                    <svg
-                                        width="18"
-                                        height="19"
-                                        viewBox="0 0 18 19"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 2.69141C3.59266 2.69141 2.24951 4.03455 2.24951 5.69141C2.24951 7.34826 3.59266 8.69141 5.24951 8.69141H12.7495C14.4064 8.69141 15.7495 7.34826 15.7495 5.69141C15.7495 4.03455 14.4064 2.69141 12.7495 2.69141H5.24951ZM6.74951 5.6914C6.74951 6.51983 6.07794 7.1914 5.24951 7.1914C4.42109 7.1914 3.74951 6.51983 3.74951 5.6914C3.74951 4.86298 4.42109 4.1914 5.24951 4.1914C6.07794 4.1914 6.74951 4.86298 6.74951 5.6914Z"
-                                            fill="#3699FF"
-                                        />
-                                        <path
-                                            opacity="0.3"
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 10.1914C3.59266 10.1914 2.24951 11.5346 2.24951 13.1914C2.24951 14.8483 3.59266 16.1914 5.24951 16.1914H12.7495C14.4064 16.1914 15.7495 14.8483 15.7495 13.1914C15.7495 11.5346 14.4064 10.1914 12.7495 10.1914H5.24951ZM14.2495 13.1914C14.2495 14.0198 13.5779 14.6914 12.7495 14.6914C11.9211 14.6914 11.2495 14.0198 11.2495 13.1914C11.2495 12.363 11.9211 11.6914 12.7495 11.6914C13.5779 11.6914 14.2495 12.363 14.2495 13.1914Z"
-                                            fill="#3699FF"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="event">
-                            <div className="right">
-                                <div className="d-flex flex-column align-items-center">
-                                    <div>
-                                        <svg
-                                            width="36"
-                                            height="37"
-                                            viewBox="0 0 36 37"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                y="0.441406"
-                                                width="36"
-                                                height="36"
-                                                rx="18"
-                                                fill="#EFF2F5"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                fill-rule="evenodd"
-                                                clip-rule="evenodd"
-                                                d="M16.5856 18.9125L15.1714 20.3267C14.911 20.5871 14.911 21.0092 15.1714 21.2695C15.4317 21.5299 15.8538 21.5299 16.1142 21.2695L17.5284 19.8553L17.9998 20.3267C18.5205 20.8474 18.5205 21.6916 17.9998 22.2123L16.1142 24.098C15.5935 24.6187 14.7493 24.6187 14.2286 24.098L12.343 22.2123C11.8223 21.6916 11.8223 20.8474 12.343 20.3267L14.2286 18.4411C14.7493 17.9204 15.5935 17.9204 16.1142 18.4411L16.5856 18.9125Z"
-                                                fill="#7E8299"
-                                            />
-                                            <path
-                                                fill-rule="evenodd"
-                                                clip-rule="evenodd"
-                                                d="M19.4142 17.9703L20.8284 16.5561C21.0887 16.2957 21.0887 15.8736 20.8284 15.6133C20.568 15.3529 20.1459 15.3529 19.8856 15.6133L18.4713 17.0275L17.9999 16.5561C17.4792 16.0354 17.4792 15.1912 17.9999 14.6705L19.8856 12.7849C20.4063 12.2642 21.2505 12.2642 21.7712 12.7849L23.6568 14.6705C24.1775 15.1912 24.1775 16.0354 23.6568 16.5561L21.7712 18.4417C21.2505 18.9624 20.4063 18.9624 19.8856 18.4417L19.4142 17.9703Z"
-                                                fill="#7E8299"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                fill-rule="evenodd"
-                                                clip-rule="evenodd"
-                                                d="M12.8147 14.1994C12.5543 13.9391 12.5543 13.517 12.8147 13.2566C13.075 12.9963 13.4971 12.9963 13.7575 13.2566L14.7003 14.1994C14.9606 14.4598 14.9606 14.8819 14.7003 15.1422C14.4399 15.4026 14.0178 15.4026 13.7575 15.1422L12.8147 14.1994ZM15.5626 12.1184C15.5626 11.7502 15.8611 11.4517 16.2293 11.4517C16.5975 11.4517 16.8959 11.7502 16.8959 12.1184L16.8959 13.4517C16.8959 13.8199 16.5975 14.1184 16.2293 14.1184C15.8611 14.1184 15.5626 13.8199 15.5626 13.4517L15.5626 12.1184ZM11.1245 16.5564C11.1245 16.1882 11.423 15.8897 11.7912 15.8897L13.1245 15.8897C13.4927 15.8897 13.7912 16.1882 13.7912 16.5564C13.7912 16.9246 13.4927 17.2231 13.1245 17.2231L11.7912 17.2231C11.423 17.2231 11.1245 16.9246 11.1245 16.5564Z"
-                                                fill="#7E8299"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                fill-rule="evenodd"
-                                                clip-rule="evenodd"
-                                                d="M22.1619 23.5467C22.4222 23.807 22.8443 23.807 23.1047 23.5467C23.365 23.2863 23.365 22.8642 23.1047 22.6039L22.1619 21.6611C21.9015 21.4007 21.4794 21.4007 21.2191 21.6611C20.9587 21.9214 20.9587 22.3435 21.2191 22.6039L22.1619 23.5467ZM24.243 20.7987C24.6112 20.7987 24.9097 20.5003 24.9097 20.1321C24.9097 19.7639 24.6112 19.4654 24.243 19.4654H22.9097C22.5415 19.4654 22.243 19.7639 22.243 20.1321C22.243 20.5003 22.5415 20.7987 22.9097 20.7987L24.243 20.7987ZM19.8049 25.2368C20.1731 25.2368 20.4716 24.9383 20.4716 24.5701L20.4716 23.2368C20.4716 22.8686 20.1731 22.5701 19.8049 22.5701C19.4367 22.5701 19.1383 22.8686 19.1383 23.2368L19.1383 24.5701C19.1383 24.9383 19.4367 25.2368 19.8049 25.2368Z"
-                                                fill="#7E8299"
-                                            />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span className="span-1">
-                                        تغییر راننده و خودرو
-                                    </span>
-                                    <span className="span-2">
-                                        08:01 توسط{" "}
-                                        <span className="blue">
-                                            حسام الدین طباطبایی
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="left">
-                                <button>مشاهده اطلاعات کاربر</button>
-                                <button>
-                                    مشاهده لوکیشن
-                                    <svg
-                                        width="18"
-                                        height="19"
-                                        viewBox="0 0 18 19"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 2.69141C3.59266 2.69141 2.24951 4.03455 2.24951 5.69141C2.24951 7.34826 3.59266 8.69141 5.24951 8.69141H12.7495C14.4064 8.69141 15.7495 7.34826 15.7495 5.69141C15.7495 4.03455 14.4064 2.69141 12.7495 2.69141H5.24951ZM6.74951 5.6914C6.74951 6.51983 6.07794 7.1914 5.24951 7.1914C4.42109 7.1914 3.74951 6.51983 3.74951 5.6914C3.74951 4.86298 4.42109 4.1914 5.24951 4.1914C6.07794 4.1914 6.74951 4.86298 6.74951 5.6914Z"
-                                            fill="#3699FF"
-                                        />
-                                        <path
-                                            opacity="0.3"
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 10.1914C3.59266 10.1914 2.24951 11.5346 2.24951 13.1914C2.24951 14.8483 3.59266 16.1914 5.24951 16.1914H12.7495C14.4064 16.1914 15.7495 14.8483 15.7495 13.1914C15.7495 11.5346 14.4064 10.1914 12.7495 10.1914H5.24951ZM14.2495 13.1914C14.2495 14.0198 13.5779 14.6914 12.7495 14.6914C11.9211 14.6914 11.2495 14.0198 11.2495 13.1914C11.2495 12.363 11.9211 11.6914 12.7495 11.6914C13.5779 11.6914 14.2495 12.363 14.2495 13.1914Z"
-                                            fill="#3699FF"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div> */}
                                 <div className="empty-div"></div>
                                 <div className="end-div">
                                     <div className="img-div">
@@ -1827,8 +1485,8 @@ const TravelInfo = (props) => {
                                         </svg>
                                     </div>
                                 </div>
-                                {tripInfo.EventTrip !== undefined &&
-                                    tripInfo.EventTrip.map((item) => {
+                                {tripInfo.TripEventForStudent !== undefined &&
+                                    tripInfo.TripEventForStudent.map((item) => {
                                         return (
                                             <div className="event">
                                                 <div className="right">
@@ -1928,451 +1586,6 @@ const TravelInfo = (props) => {
                                             </div>
                                         );
                                     })}
-
-                                {/* <div className="event">
-                            <div className="right">
-                                <div className="d-flex flex-column align-items-center">
-                                    <div>
-                                        <svg
-                                            width="36"
-                                            height="37"
-                                            viewBox="0 0 36 37"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                y="0.441406"
-                                                width="36"
-                                                height="36"
-                                                rx="18"
-                                                fill="#EFF2F5"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                d="M18.0002 17.7747C16.5274 17.7747 15.3335 16.5808 15.3335 15.1081C15.3335 13.6353 16.5274 12.4414 18.0002 12.4414C19.4729 12.4414 20.6668 13.6353 20.6668 15.1081C20.6668 16.5808 19.4729 17.7747 18.0002 17.7747Z"
-                                                fill="#7E8299"
-                                            />
-                                            <path
-                                                d="M12.0004 23.9079C12.2588 20.7261 14.8413 19.1084 17.9889 19.1084C21.1808 19.1084 23.8033 20.6372 23.9986 23.9084C24.0064 24.0387 23.9986 24.4417 23.4978 24.4417C21.0274 24.4417 17.3565 24.4417 12.485 24.4417C12.3178 24.4417 11.9864 24.0812 12.0004 23.9079Z"
-                                                fill="#7E8299"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <div className="mar-y-4">
-                                        <svg
-                                            width="2"
-                                            height="56"
-                                            viewBox="0 0 2 56"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                x="0.5"
-                                                y="0.941406"
-                                                width="1"
-                                                height="54"
-                                                rx="0.5"
-                                                stroke="#E4E6EF"
-                                                stroke-dasharray="4 4"
-                                            />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span className="span-1">
-                                        پایان سرویس دبیرستان دخترانه فرزانگان
-                                    </span>
-                                    <span className="span-2">
-                                        08:01 توسط{" "}
-                                        <span className="blue">
-                                            حسام الدین طباطبایی
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="left">
-                                <button>مشاهده اطلاعات کاربر</button>
-                                <button>
-                                    مشاهده لوکیشن
-                                    <svg
-                                        width="18"
-                                        height="19"
-                                        viewBox="0 0 18 19"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 2.69141C3.59266 2.69141 2.24951 4.03455 2.24951 5.69141C2.24951 7.34826 3.59266 8.69141 5.24951 8.69141H12.7495C14.4064 8.69141 15.7495 7.34826 15.7495 5.69141C15.7495 4.03455 14.4064 2.69141 12.7495 2.69141H5.24951ZM6.74951 5.6914C6.74951 6.51983 6.07794 7.1914 5.24951 7.1914C4.42109 7.1914 3.74951 6.51983 3.74951 5.6914C3.74951 4.86298 4.42109 4.1914 5.24951 4.1914C6.07794 4.1914 6.74951 4.86298 6.74951 5.6914Z"
-                                            fill="#3699FF"
-                                        />
-                                        <path
-                                            opacity="0.3"
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 10.1914C3.59266 10.1914 2.24951 11.5346 2.24951 13.1914C2.24951 14.8483 3.59266 16.1914 5.24951 16.1914H12.7495C14.4064 16.1914 15.7495 14.8483 15.7495 13.1914C15.7495 11.5346 14.4064 10.1914 12.7495 10.1914H5.24951ZM14.2495 13.1914C14.2495 14.0198 13.5779 14.6914 12.7495 14.6914C11.9211 14.6914 11.2495 14.0198 11.2495 13.1914C11.2495 12.363 11.9211 11.6914 12.7495 11.6914C13.5779 11.6914 14.2495 12.363 14.2495 13.1914Z"
-                                            fill="#3699FF"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="event">
-                            <div className="right">
-                                <div className="d-flex flex-column align-items-center">
-                                    <div>
-                                        <svg
-                                            width="36"
-                                            height="37"
-                                            viewBox="0 0 36 37"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                y="0.441406"
-                                                width="36"
-                                                height="36"
-                                                rx="18"
-                                                fill="#EFF2F5"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                d="M18.0002 17.7747C16.5274 17.7747 15.3335 16.5808 15.3335 15.1081C15.3335 13.6353 16.5274 12.4414 18.0002 12.4414C19.4729 12.4414 20.6668 13.6353 20.6668 15.1081C20.6668 16.5808 19.4729 17.7747 18.0002 17.7747Z"
-                                                fill="#7E8299"
-                                            />
-                                            <path
-                                                d="M12.0004 23.9079C12.2588 20.7261 14.8413 19.1084 17.9889 19.1084C21.1808 19.1084 23.8033 20.6372 23.9986 23.9084C24.0064 24.0387 23.9986 24.4417 23.4978 24.4417C21.0274 24.4417 17.3565 24.4417 12.485 24.4417C12.3178 24.4417 11.9864 24.0812 12.0004 23.9079Z"
-                                                fill="#7E8299"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <div className="mar-y-4">
-                                        <svg
-                                            width="2"
-                                            height="56"
-                                            viewBox="0 0 2 56"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                x="0.5"
-                                                y="0.941406"
-                                                width="1"
-                                                height="54"
-                                                rx="0.5"
-                                                stroke="#E4E6EF"
-                                                stroke-dasharray="4 4"
-                                            />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span className="span-1">
-                                        پایان سرویس دبیرستان دخترانه فرزانگان
-                                    </span>
-                                    <span className="span-2">
-                                        08:01 توسط{" "}
-                                        <span className="blue">
-                                            حسام الدین طباطبایی
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="left">
-                                <button>مشاهده اطلاعات کاربر</button>
-                                <button>
-                                    مشاهده لوکیشن
-                                    <svg
-                                        width="18"
-                                        height="19"
-                                        viewBox="0 0 18 19"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 2.69141C3.59266 2.69141 2.24951 4.03455 2.24951 5.69141C2.24951 7.34826 3.59266 8.69141 5.24951 8.69141H12.7495C14.4064 8.69141 15.7495 7.34826 15.7495 5.69141C15.7495 4.03455 14.4064 2.69141 12.7495 2.69141H5.24951ZM6.74951 5.6914C6.74951 6.51983 6.07794 7.1914 5.24951 7.1914C4.42109 7.1914 3.74951 6.51983 3.74951 5.6914C3.74951 4.86298 4.42109 4.1914 5.24951 4.1914C6.07794 4.1914 6.74951 4.86298 6.74951 5.6914Z"
-                                            fill="#3699FF"
-                                        />
-                                        <path
-                                            opacity="0.3"
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 10.1914C3.59266 10.1914 2.24951 11.5346 2.24951 13.1914C2.24951 14.8483 3.59266 16.1914 5.24951 16.1914H12.7495C14.4064 16.1914 15.7495 14.8483 15.7495 13.1914C15.7495 11.5346 14.4064 10.1914 12.7495 10.1914H5.24951ZM14.2495 13.1914C14.2495 14.0198 13.5779 14.6914 12.7495 14.6914C11.9211 14.6914 11.2495 14.0198 11.2495 13.1914C11.2495 12.363 11.9211 11.6914 12.7495 11.6914C13.5779 11.6914 14.2495 12.363 14.2495 13.1914Z"
-                                            fill="#3699FF"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="event">
-                            <div className="right">
-                                <div className="d-flex flex-column align-items-center">
-                                    <div>
-                                        <svg
-                                            width="36"
-                                            height="37"
-                                            viewBox="0 0 36 37"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                y="0.441406"
-                                                width="36"
-                                                height="36"
-                                                rx="18"
-                                                fill="#EFF2F5"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                d="M18.0002 17.7747C16.5274 17.7747 15.3335 16.5808 15.3335 15.1081C15.3335 13.6353 16.5274 12.4414 18.0002 12.4414C19.4729 12.4414 20.6668 13.6353 20.6668 15.1081C20.6668 16.5808 19.4729 17.7747 18.0002 17.7747Z"
-                                                fill="#7E8299"
-                                            />
-                                            <path
-                                                d="M12.0004 23.9079C12.2588 20.7261 14.8413 19.1084 17.9889 19.1084C21.1808 19.1084 23.8033 20.6372 23.9986 23.9084C24.0064 24.0387 23.9986 24.4417 23.4978 24.4417C21.0274 24.4417 17.3565 24.4417 12.485 24.4417C12.3178 24.4417 11.9864 24.0812 12.0004 23.9079Z"
-                                                fill="#7E8299"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <div className="mar-y-4">
-                                        <svg
-                                            width="2"
-                                            height="56"
-                                            viewBox="0 0 2 56"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                x="0.5"
-                                                y="0.941406"
-                                                width="1"
-                                                height="54"
-                                                rx="0.5"
-                                                stroke="#E4E6EF"
-                                                stroke-dasharray="4 4"
-                                            />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span className="span-1">
-                                        پایان سرویس دبیرستان دخترانه فرزانگان
-                                    </span>
-                                    <span className="span-2">
-                                        08:01 توسط{" "}
-                                        <span className="blue">
-                                            حسام الدین طباطبایی
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="left">
-                                <button>مشاهده اطلاعات کاربر</button>
-                                <button>
-                                    مشاهده لوکیشن
-                                    <svg
-                                        width="18"
-                                        height="19"
-                                        viewBox="0 0 18 19"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 2.69141C3.59266 2.69141 2.24951 4.03455 2.24951 5.69141C2.24951 7.34826 3.59266 8.69141 5.24951 8.69141H12.7495C14.4064 8.69141 15.7495 7.34826 15.7495 5.69141C15.7495 4.03455 14.4064 2.69141 12.7495 2.69141H5.24951ZM6.74951 5.6914C6.74951 6.51983 6.07794 7.1914 5.24951 7.1914C4.42109 7.1914 3.74951 6.51983 3.74951 5.6914C3.74951 4.86298 4.42109 4.1914 5.24951 4.1914C6.07794 4.1914 6.74951 4.86298 6.74951 5.6914Z"
-                                            fill="#3699FF"
-                                        />
-                                        <path
-                                            opacity="0.3"
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 10.1914C3.59266 10.1914 2.24951 11.5346 2.24951 13.1914C2.24951 14.8483 3.59266 16.1914 5.24951 16.1914H12.7495C14.4064 16.1914 15.7495 14.8483 15.7495 13.1914C15.7495 11.5346 14.4064 10.1914 12.7495 10.1914H5.24951ZM14.2495 13.1914C14.2495 14.0198 13.5779 14.6914 12.7495 14.6914C11.9211 14.6914 11.2495 14.0198 11.2495 13.1914C11.2495 12.363 11.9211 11.6914 12.7495 11.6914C13.5779 11.6914 14.2495 12.363 14.2495 13.1914Z"
-                                            fill="#3699FF"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="event">
-                            <div className="right">
-                                <div className="d-flex flex-column align-items-center">
-                                    <div>
-                                        <svg
-                                            width="36"
-                                            height="37"
-                                            viewBox="0 0 36 37"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                y="0.441406"
-                                                width="36"
-                                                height="36"
-                                                rx="18"
-                                                fill="#EFF2F5"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                d="M18.0002 17.7747C16.5274 17.7747 15.3335 16.5808 15.3335 15.1081C15.3335 13.6353 16.5274 12.4414 18.0002 12.4414C19.4729 12.4414 20.6668 13.6353 20.6668 15.1081C20.6668 16.5808 19.4729 17.7747 18.0002 17.7747Z"
-                                                fill="#7E8299"
-                                            />
-                                            <path
-                                                d="M12.0004 23.9079C12.2588 20.7261 14.8413 19.1084 17.9889 19.1084C21.1808 19.1084 23.8033 20.6372 23.9986 23.9084C24.0064 24.0387 23.9986 24.4417 23.4978 24.4417C21.0274 24.4417 17.3565 24.4417 12.485 24.4417C12.3178 24.4417 11.9864 24.0812 12.0004 23.9079Z"
-                                                fill="#7E8299"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <div className="mar-y-4">
-                                        <svg
-                                            width="2"
-                                            height="56"
-                                            viewBox="0 0 2 56"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                x="0.5"
-                                                y="0.941406"
-                                                width="1"
-                                                height="54"
-                                                rx="0.5"
-                                                stroke="#E4E6EF"
-                                                stroke-dasharray="4 4"
-                                            />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span className="span-1">
-                                        پایان سرویس دبیرستان دخترانه فرزانگان
-                                    </span>
-                                    <span className="span-2">
-                                        08:01 توسط{" "}
-                                        <span className="blue">
-                                            حسام الدین طباطبایی
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="left">
-                                <button>مشاهده اطلاعات کاربر</button>
-                                <button>
-                                    مشاهده لوکیشن
-                                    <svg
-                                        width="18"
-                                        height="19"
-                                        viewBox="0 0 18 19"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 2.69141C3.59266 2.69141 2.24951 4.03455 2.24951 5.69141C2.24951 7.34826 3.59266 8.69141 5.24951 8.69141H12.7495C14.4064 8.69141 15.7495 7.34826 15.7495 5.69141C15.7495 4.03455 14.4064 2.69141 12.7495 2.69141H5.24951ZM6.74951 5.6914C6.74951 6.51983 6.07794 7.1914 5.24951 7.1914C4.42109 7.1914 3.74951 6.51983 3.74951 5.6914C3.74951 4.86298 4.42109 4.1914 5.24951 4.1914C6.07794 4.1914 6.74951 4.86298 6.74951 5.6914Z"
-                                            fill="#3699FF"
-                                        />
-                                        <path
-                                            opacity="0.3"
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 10.1914C3.59266 10.1914 2.24951 11.5346 2.24951 13.1914C2.24951 14.8483 3.59266 16.1914 5.24951 16.1914H12.7495C14.4064 16.1914 15.7495 14.8483 15.7495 13.1914C15.7495 11.5346 14.4064 10.1914 12.7495 10.1914H5.24951ZM14.2495 13.1914C14.2495 14.0198 13.5779 14.6914 12.7495 14.6914C11.9211 14.6914 11.2495 14.0198 11.2495 13.1914C11.2495 12.363 11.9211 11.6914 12.7495 11.6914C13.5779 11.6914 14.2495 12.363 14.2495 13.1914Z"
-                                            fill="#3699FF"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="event">
-                            <div className="right">
-                                <div className="d-flex flex-column align-items-center">
-                                    <div>
-                                        <svg
-                                            width="36"
-                                            height="37"
-                                            viewBox="0 0 36 37"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <rect
-                                                y="0.441406"
-                                                width="36"
-                                                height="36"
-                                                rx="18"
-                                                fill="#EFF2F5"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                fill-rule="evenodd"
-                                                clip-rule="evenodd"
-                                                d="M16.5856 18.9125L15.1714 20.3267C14.911 20.5871 14.911 21.0092 15.1714 21.2695C15.4317 21.5299 15.8538 21.5299 16.1142 21.2695L17.5284 19.8553L17.9998 20.3267C18.5205 20.8474 18.5205 21.6916 17.9998 22.2123L16.1142 24.098C15.5935 24.6187 14.7493 24.6187 14.2286 24.098L12.343 22.2123C11.8223 21.6916 11.8223 20.8474 12.343 20.3267L14.2286 18.4411C14.7493 17.9204 15.5935 17.9204 16.1142 18.4411L16.5856 18.9125Z"
-                                                fill="#7E8299"
-                                            />
-                                            <path
-                                                fill-rule="evenodd"
-                                                clip-rule="evenodd"
-                                                d="M19.4142 17.9703L20.8284 16.5561C21.0887 16.2957 21.0887 15.8736 20.8284 15.6133C20.568 15.3529 20.1459 15.3529 19.8856 15.6133L18.4713 17.0275L17.9999 16.5561C17.4792 16.0354 17.4792 15.1912 17.9999 14.6705L19.8856 12.7849C20.4063 12.2642 21.2505 12.2642 21.7712 12.7849L23.6568 14.6705C24.1775 15.1912 24.1775 16.0354 23.6568 16.5561L21.7712 18.4417C21.2505 18.9624 20.4063 18.9624 19.8856 18.4417L19.4142 17.9703Z"
-                                                fill="#7E8299"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                fill-rule="evenodd"
-                                                clip-rule="evenodd"
-                                                d="M12.8147 14.1994C12.5543 13.9391 12.5543 13.517 12.8147 13.2566C13.075 12.9963 13.4971 12.9963 13.7575 13.2566L14.7003 14.1994C14.9606 14.4598 14.9606 14.8819 14.7003 15.1422C14.4399 15.4026 14.0178 15.4026 13.7575 15.1422L12.8147 14.1994ZM15.5626 12.1184C15.5626 11.7502 15.8611 11.4517 16.2293 11.4517C16.5975 11.4517 16.8959 11.7502 16.8959 12.1184L16.8959 13.4517C16.8959 13.8199 16.5975 14.1184 16.2293 14.1184C15.8611 14.1184 15.5626 13.8199 15.5626 13.4517L15.5626 12.1184ZM11.1245 16.5564C11.1245 16.1882 11.423 15.8897 11.7912 15.8897L13.1245 15.8897C13.4927 15.8897 13.7912 16.1882 13.7912 16.5564C13.7912 16.9246 13.4927 17.2231 13.1245 17.2231L11.7912 17.2231C11.423 17.2231 11.1245 16.9246 11.1245 16.5564Z"
-                                                fill="#7E8299"
-                                            />
-                                            <path
-                                                opacity="0.3"
-                                                fill-rule="evenodd"
-                                                clip-rule="evenodd"
-                                                d="M22.1619 23.5467C22.4222 23.807 22.8443 23.807 23.1047 23.5467C23.365 23.2863 23.365 22.8642 23.1047 22.6039L22.1619 21.6611C21.9015 21.4007 21.4794 21.4007 21.2191 21.6611C20.9587 21.9214 20.9587 22.3435 21.2191 22.6039L22.1619 23.5467ZM24.243 20.7987C24.6112 20.7987 24.9097 20.5003 24.9097 20.1321C24.9097 19.7639 24.6112 19.4654 24.243 19.4654H22.9097C22.5415 19.4654 22.243 19.7639 22.243 20.1321C22.243 20.5003 22.5415 20.7987 22.9097 20.7987L24.243 20.7987ZM19.8049 25.2368C20.1731 25.2368 20.4716 24.9383 20.4716 24.5701L20.4716 23.2368C20.4716 22.8686 20.1731 22.5701 19.8049 22.5701C19.4367 22.5701 19.1383 22.8686 19.1383 23.2368L19.1383 24.5701C19.1383 24.9383 19.4367 25.2368 19.8049 25.2368Z"
-                                                fill="#7E8299"
-                                            />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span className="span-1">
-                                        تغییر راننده و خودرو
-                                    </span>
-                                    <span className="span-2">
-                                        08:01 توسط{" "}
-                                        <span className="blue">
-                                            حسام الدین طباطبایی
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="left">
-                                <button>مشاهده اطلاعات کاربر</button>
-                                <button>
-                                    مشاهده لوکیشن
-                                    <svg
-                                        width="18"
-                                        height="19"
-                                        viewBox="0 0 18 19"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 2.69141C3.59266 2.69141 2.24951 4.03455 2.24951 5.69141C2.24951 7.34826 3.59266 8.69141 5.24951 8.69141H12.7495C14.4064 8.69141 15.7495 7.34826 15.7495 5.69141C15.7495 4.03455 14.4064 2.69141 12.7495 2.69141H5.24951ZM6.74951 5.6914C6.74951 6.51983 6.07794 7.1914 5.24951 7.1914C4.42109 7.1914 3.74951 6.51983 3.74951 5.6914C3.74951 4.86298 4.42109 4.1914 5.24951 4.1914C6.07794 4.1914 6.74951 4.86298 6.74951 5.6914Z"
-                                            fill="#3699FF"
-                                        />
-                                        <path
-                                            opacity="0.3"
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M5.24951 10.1914C3.59266 10.1914 2.24951 11.5346 2.24951 13.1914C2.24951 14.8483 3.59266 16.1914 5.24951 16.1914H12.7495C14.4064 16.1914 15.7495 14.8483 15.7495 13.1914C15.7495 11.5346 14.4064 10.1914 12.7495 10.1914H5.24951ZM14.2495 13.1914C14.2495 14.0198 13.5779 14.6914 12.7495 14.6914C11.9211 14.6914 11.2495 14.0198 11.2495 13.1914C11.2495 12.363 11.9211 11.6914 12.7495 11.6914C13.5779 11.6914 14.2495 12.363 14.2495 13.1914Z"
-                                            fill="#3699FF"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div> */}
                                 <div className="empty-div"></div>
                                 <div className="end-div">
                                     <div className="img-div">
@@ -2573,96 +1786,219 @@ const TravelInfo = (props) => {
                                 </label>
                             </div>
                             <h6 className="titr">اطلاعات راننده جایگزین</h6>
-                            <div className="radio-row">
+                            <div
+                                className="radio-row"
+                                onChange={(e) => {
+                                    setIsNew(e.target.value);
+                                }}
+                            >
                                 <label>
-                                    <input type="radio" name="driver" />
+                                    <input
+                                        value="true"
+                                        type="radio"
+                                        name="driver"
+                                        defaultChecked
+                                    />
                                     انتخاب راننده از لیست رانندگان من
                                 </label>
                                 <label>
-                                    <input type="radio" name="driver" />
+                                    <input
+                                        value="false"
+                                        type="radio"
+                                        name="driver"
+                                    />
                                     انتخاب راننده از لیست رانندگان من
                                 </label>
                             </div>
-                            <div className="row-inp">
-                                <label>
-                                    <span>نام راننده جایگزین</span>
-                                    <input
-                                        type="text"
-                                        value="کریم"
-                                        name=""
-                                        id=""
-                                    />
-                                    <small>
-                                        لطفا نام راننده جایگزین را انتخاب کنید.
-                                    </small>
-                                </label>
-                                <label>
-                                    <span>نام خانوادگی راننده جایگزین</span>
-                                    <input
-                                        type="text"
-                                        value="باقری"
-                                        name=""
-                                        id=""
-                                    />
-                                    <small>
-                                        لطفا نام خانوادگی راننده جایگزین را
-                                        انتخاب کنید.
-                                    </small>
-                                </label>
-                                <label>
-                                    <span>تلفن همراه راننده جایگزین</span>
-                                    <input
-                                        type="text"
-                                        value="09123456789"
-                                        name=""
-                                        id=""
-                                    />
-                                    <small>
-                                        لطفا تلفن همراه راننده جایگزین را انتخاب
-                                        کنید.
-                                    </small>
-                                </label>
-                            </div>
-                            <h6 className="titr">اطلاعات راننده جایگزین</h6>
-                            <div className="row-inp">
-                                <label>
-                                    <span>مدل خوردو</span>
-                                    <select name="" id="">
-                                        <option value="">پژو 206</option>
-                                    </select>
-                                    <small>
-                                        لطفا مدل خوردو را انتخاب کنید.
-                                    </small>
-                                </label>
-                                <label>
-                                    <span>شماره پلاک خودرو</span>
-                                    <input
-                                        type="text"
-                                        value="54 ایران 24 ص 543"
-                                        name=""
-                                        id=""
-                                    />
-                                    <small>
-                                        لطفا شماره پلاک خودرو را انتخاب کنید.
-                                    </small>
-                                </label>
-                                <label>
-                                    <span>رنگ خودرو</span>
-                                    <input
-                                        type="text"
-                                        value="سفید"
-                                        name=""
-                                        id=""
-                                    />
-                                    <small>
-                                        لطفا رنگ خودرو را انتخاب کنید.
-                                    </small>
-                                </label>
-                            </div>
-                            <div className="buttons">
-                                <button className="cancle">انصراف</button>
-                                <button className="submit">ذخیره </button>
-                            </div>
+                            {isNew == "false" ? (
+                                <>
+                                    <div className="row-inp">
+                                        <label>
+                                            <span>نام راننده جایگزین</span>
+                                            <input
+                                                onChange={(e) => {
+                                                    setDriverName(
+                                                        e.target.value
+                                                    );
+                                                }}
+                                                type="text"
+                                                name=""
+                                                id=""
+                                            />
+                                            <small>
+                                                لطفا نام راننده جایگزین را
+                                                انتخاب کنید.
+                                            </small>
+                                        </label>
+                                        <label>
+                                            <span>
+                                                نام خانوادگی راننده جایگزین
+                                            </span>
+                                            <input
+                                                onChange={(e) => {
+                                                    setDriverLastName(
+                                                        e.target.value
+                                                    );
+                                                }}
+                                                type="text"
+                                                name=""
+                                                id=""
+                                            />
+                                            <small>
+                                                لطفا نام خانوادگی راننده جایگزین
+                                                را انتخاب کنید.
+                                            </small>
+                                        </label>
+                                        <label>
+                                            <span>
+                                                تلفن همراه راننده جایگزین
+                                            </span>
+                                            <input
+                                                onChange={(e) => {
+                                                    setDriverPhone(
+                                                        e.target.value
+                                                    );
+                                                }}
+                                                type="text"
+                                                name=""
+                                                id=""
+                                            />
+                                            <small>
+                                                لطفا تلفن همراه راننده جایگزین
+                                                را انتخاب کنید.
+                                            </small>
+                                        </label>
+                                    </div>
+                                    <div className="row-inp">
+                                        <label>
+                                            <span>کد ملی راننده جایگزین</span>
+                                            <input
+                                                onChange={(e) => {
+                                                    setDriverNationalCode(
+                                                        e.target.value
+                                                    );
+                                                }}
+                                                type="text"
+                                                name=""
+                                                id=""
+                                            />
+                                            <small>
+                                                لطفا کد ملی راننده جایگزین را
+                                                انتخاب کنید.
+                                            </small>
+                                        </label>
+                                    </div>
+                                    <h6 className="titr">اطلاعات خودرو</h6>
+                                    <div className="row-inp">
+                                        <label>
+                                            <span>مدل خوردو</span>
+                                            <input
+                                                onChange={(e) => {
+                                                    setCarModel(e.target.value);
+                                                }}
+                                                type="text"
+                                                name=""
+                                                id=""
+                                            />
+                                            <small>
+                                                لطفا مدل خوردو را انتخاب کنید.
+                                            </small>
+                                        </label>
+                                        <label>
+                                            <span>شماره پلاک خودرو</span>
+                                            <input
+                                                onChange={(e) => {
+                                                    setPlates(e.target.value);
+                                                }}
+                                                type="text"
+                                                name=""
+                                                id=""
+                                            />
+                                            <small>
+                                                لطفا شماره پلاک خودرو را انتخاب
+                                                کنید.
+                                            </small>
+                                        </label>
+                                        <label>
+                                            <span>رنگ خودرو</span>
+                                            <input
+                                                onChange={(e) => {
+                                                    setCarColor(e.target.value);
+                                                }}
+                                                type="text"
+                                                name=""
+                                                id=""
+                                            />
+                                            <small>
+                                                لطفا رنگ خودرو را انتخاب کنید.
+                                            </small>
+                                        </label>
+                                    </div>
+                                    <div className="buttons">
+                                        <button className="cancle">
+                                            انصراف
+                                        </button>
+                                        <button
+                                            onClick={newDriverSubmit}
+                                            className="submit"
+                                        >
+                                            ذخیره{" "}
+                                        </button>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="row-inp">
+                                        <label>
+                                            <span>
+                                                راننده جایگزین را انتخاب کنید
+                                            </span>
+                                            <select
+                                                onChange={(e) => {
+                                                    setSelectedDriverId(
+                                                        e.target.value
+                                                    );
+                                                }}
+                                                name=""
+                                                id=""
+                                            >
+                                                <option
+                                                    value=""
+                                                    disabled
+                                                    selected
+                                                >
+                                                    انتخاب راننده
+                                                </option>
+                                                {drivers !== undefined &&
+                                                    drivers.map((item) => {
+                                                        return (
+                                                            <option
+                                                                value={item.id}
+                                                            >
+                                                                {item.name}
+                                                            </option>
+                                                        );
+                                                    })}
+                                            </select>
+                                            <small>
+                                                لطفا مدل خوردو را انتخاب کنید.
+                                            </small>
+                                        </label>
+                                    </div>
+
+                                    <div className="buttons">
+                                        <button className="cancle">
+                                            انصراف
+                                        </button>
+                                        <button
+                                            onClick={existDriverSubmit}
+                                            className="submit"
+                                        >
+                                            ذخیره{" "}
+                                        </button>
+                                    </div>
+                                </>
+                            )}
                         </ReplacedService>
                     )}
                 </>
