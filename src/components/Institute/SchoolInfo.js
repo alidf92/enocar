@@ -14,6 +14,18 @@ import CashInfo from "./CashInfo";
 
 const Main = styled.div`
     padding: 30px 36px;
+    .bg-red {
+        background: #fff5f8 !important;
+        color: #f1416c !important;
+    }
+    .bg-green {
+        background: #e8fff3 !important;
+        color: #50cd89 !important;
+    }
+    .bg-per {
+        background: #eee5ff !important;
+        color: #8950fc !important;
+    }
     .all {
         display: flex;
         align-items: center;
@@ -853,10 +865,13 @@ const Travels = styled.div`
     .new-td {
         tr {
             border-bottom: 1px dashed #e4e6ef;
+            td,
+            th {
+                font-size: 13px !important;
+            }
         }
         td {
             font-weight: 500;
-            font-size: 16px;
             line-height: 21px;
             text-align: right;
             color: #7e8299;
@@ -2660,157 +2675,142 @@ const SchoolInfo = (props) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {/* {props.data.tripArray !== undefined &&
-                                        props.data.tripArray.map((item) => {
-                                            return (
-                                                <tr>
-                                                    <td>#{item.trip_id}</td>
-                                                    <td>
-                                                        <div className="img-divs">
-                                                            <img
-                                                                width={51}
-                                                                height={51}
-                                                                src={
-                                                                    item.school_image
-                                                                }
-                                                                alt=""
-                                                            />
+                                    {props.data.ListTripSchool !== undefined &&
+                                        props.data.ListTripSchool.map(
+                                            (item) => {
+                                                return (
+                                                    <tr>
+                                                        <td>
+                                                            #
+                                                            {item.id_trip !==
+                                                                undefined &&
+                                                                item.id_trip}
+                                                        </td>
+                                                        <td>
+                                                            <div className="img-divs">
+                                                                <img
+                                                                    width={51}
+                                                                    height={51}
+                                                                    src={
+                                                                        item.driver_image
+                                                                    }
+                                                                    alt=""
+                                                                />
+                                                                <div>
+                                                                    <span className="span-1">
+                                                                        {
+                                                                            item.driver_name
+                                                                        }{" "}
+                                                                        {
+                                                                            item.driver_l_name
+                                                                        }
+                                                                    </span>
+                                                                    <span className="span-2">
+                                                                        {
+                                                                            item.driver_phone
+                                                                        }
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
                                                             <div>
                                                                 <span className="span-1">
                                                                     {
-                                                                        item.school_name
+                                                                        item.driver_car_name
+                                                                    }{" "}
+                                                                    {
+                                                                        item.driver_car_color
                                                                     }
                                                                 </span>
                                                                 <span className="span-2">
                                                                     {
-                                                                        item.school_dore
+                                                                        item.driver_car_plates
                                                                     }
                                                                 </span>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        {item.type_trip == "go"
-                                                            ? "رفت"
-                                                            : item.type_trip ==
-                                                              "return"
-                                                            ? "برگشت"
-                                                            : "رفت و برگشت"}{" "}
-                                                        − {item.time_go}
-                                                    </td>
-                                                    <td>
-                                                        {item.date_trip !==
-                                                            undefined &&
-                                                            shamsi
-                                                                .gregorianToJalali(
-                                                                    item.date_trip
-                                                                )
-                                                                .join("/")}
-                                                    </td>
-
-                                                    <td>
-                                                        {item.status_trip ==
-                                                        "end" ? (
-                                                            <div className="status bg-green">
-                                                                انجام شده
+                                                        </td>
+                                                        <td>
+                                                            <div>
+                                                                <span className="span-1">
+                                                                    {item.trip_type ==
+                                                                    "go"
+                                                                        ? "رفت"
+                                                                        : item.trip_type ==
+                                                                          "return"
+                                                                        ? "برگشت"
+                                                                        : "رفت و برگشت"}{" "}
+                                                                    −{" "}
+                                                                    {
+                                                                        item.trip_time
+                                                                    }
+                                                                </span>
+                                                                <span className="span-2">
+                                                                    {
+                                                                        item.trip_date
+                                                                    }
+                                                                </span>
                                                             </div>
-                                                        ) : item.status_trip ==
-                                                          "waiting" ? (
-                                                            <div className="status">
-                                                                در انتظار انجام
-                                                            </div>
-                                                        ) : (
-                                                            <div className="status bg-red">
-                                                                انجام نشده
-                                                            </div>
-                                                        )}
-                                                    </td>
-                                                    <td>
-                                                        <button className="w-120">
-                                                            مشاهده و ویرایش
-                                                            <svg
-                                                                width="7"
-                                                                height="12"
-                                                                viewBox="0 0 7 12"
-                                                                fill="none"
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                            >
-                                                                <path
-                                                                    d="M6.38726 1.65656C6.70769 1.33613 6.70769 0.816613 6.38726 0.496183C6.06683 0.175752 5.54731 0.175752 5.22688 0.496182L0.3038 5.41926C-0.00682905 5.72989 -0.0176973 6.23006 0.279145 6.55389L4.79196 11.477C5.09817 11.811 5.6172 11.8336 5.95125 11.5274C6.2853 11.2212 6.30786 10.7021 6.00165 10.3681L2.01969 6.02413L6.38726 1.65656Z"
-                                                                    fill="#3699FF"
-                                                                />
-                                                            </svg>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })} */}
-                                    <tr>
-                                        <td>
-                                            <span className="span-1">
-                                                #7431
-                                            </span>
-                                            <span className="span-2">
-                                                سواری شخصی
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div className="img-div">
-                                                <img
-                                                    src="/images/pm.png"
-                                                    width={50}
-                                                    height={50}
-                                                    alt=""
-                                                />
-                                                <div>
-                                                    <span className="span-1">
-                                                        حسام الدین طباطبایی
-                                                    </span>
-                                                    <span className="span-2">
-                                                        09123456789
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span className="span-1">
-                                                پژو 206 - سفید
-                                            </span>
-                                            <span className="span-2">
-                                                54 ایران 24 ص 543
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span className="span-1">
-                                                رفت − 08:00
-                                            </span>
-                                            <span className="span-2">
-                                                1401.04.09
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div className="status">
-                                                در انتظار انجام
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <button className="w-120">
-                                                مشاهده و ویرایش
-                                                <svg
-                                                    width="7"
-                                                    height="12"
-                                                    viewBox="0 0 7 12"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path
-                                                        d="M6.38726 1.65656C6.70769 1.33613 6.70769 0.816613 6.38726 0.496183C6.06683 0.175752 5.54731 0.175752 5.22688 0.496182L0.3038 5.41926C-0.00682905 5.72989 -0.0176973 6.23006 0.279145 6.55389L4.79196 11.477C5.09817 11.811 5.6172 11.8336 5.95125 11.5274C6.2853 11.2212 6.30786 10.7021 6.00165 10.3681L2.01969 6.02413L6.38726 1.65656Z"
-                                                        fill="#3699FF"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                                        </td>
+                                                        <td>
+                                                            {item.trip_status ==
+                                                            "waiting" ? (
+                                                                <div className="status">
+                                                                    در انتظار
+                                                                    انجام
+                                                                </div>
+                                                            ) : item.trip_status ==
+                                                              "driving" ? (
+                                                                <div className="status bg-per">
+                                                                    در حال انجام
+                                                                </div>
+                                                            ) : item.trip_status ==
+                                                              "replace" ? (
+                                                                <div className="status bg-green">
+                                                                    جایگزین شده
+                                                                </div>
+                                                            ) : item.trip_status ==
+                                                              "done" ? (
+                                                                <div className="status bg-green">
+                                                                    انجام شده
+                                                                </div>
+                                                            ) : item.trip_status ==
+                                                              "end" ? (
+                                                                <div className="status bg-green">
+                                                                    انجام شده
+                                                                </div>
+                                                            ) : item.trip_status ==
+                                                              "holiday" ? (
+                                                                <div className="status bg-red">
+                                                                    تعطیل
+                                                                </div>
+                                                            ) : (
+                                                                <div className="status bg-red">
+                                                                    انجام نشده
+                                                                </div>
+                                                            )}
+                                                        </td>
+                                                        <td>
+                                                            <button className="w-120">
+                                                                مشاهده و ویرایش
+                                                                <svg
+                                                                    width="7"
+                                                                    height="12"
+                                                                    viewBox="0 0 7 12"
+                                                                    fill="none"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                >
+                                                                    <path
+                                                                        d="M6.38726 1.65656C6.70769 1.33613 6.70769 0.816613 6.38726 0.496183C6.06683 0.175752 5.54731 0.175752 5.22688 0.496182L0.3038 5.41926C-0.00682905 5.72989 -0.0176973 6.23006 0.279145 6.55389L4.79196 11.477C5.09817 11.811 5.6172 11.8336 5.95125 11.5274C6.2853 11.2212 6.30786 10.7021 6.00165 10.3681L2.01969 6.02413L6.38726 1.65656Z"
+                                                                        fill="#3699FF"
+                                                                    />
+                                                                </svg>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            }
+                                        )}
                                 </tbody>
                             </table>
                         </TableDiv>
@@ -3339,46 +3339,54 @@ const SchoolInfo = (props) => {
                             </button>
                         </div>
                     </div>
-
-                    <div className="pm-box">
-                        <div className="pm-head">
-                            <div className="pm-right">
-                                <img
-                                    src="/images/prof.png"
-                                    width={60}
-                                    height={60}
-                                    alt=""
-                                />
-                                <div>
-                                    <span className="name">
-                                        حسام الدین طباطبایی
-                                    </span>
-                                    <span className="person">
-                                        ثبت نظر توسط هایده نعمتی (دانش آموز
-                                        بیرستان دخترانه فرزانگان)
-                                    </span>
+                    {props.data.ComplaintsList.map((item) => {
+                        return (
+                            <div className="pm-box">
+                                <div className="pm-head">
+                                    <div className="pm-right">
+                                        <img
+                                            src="/images/prof.png"
+                                            width={60}
+                                            height={60}
+                                            alt=""
+                                        />
+                                        <div>
+                                            <span className="name">
+                                            {item.name}
+                                            </span>
+                                            <span className="person">
+                                                ثبت نظر توسط هایده نعمتی (دانش
+                                                آموز بیرستان دخترانه فرزانگان)
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="pm-left">
+                                        <div className="text-box">
+                                            {item.date} - {item.time}
+                                        </div>
+                                    </div>
                                 </div>
+                                <p>
+                              {
+                                item.text
+                              }
+                                </p>
                             </div>
-                            <div className="pm-left">
-                                <div className="text-box">
-                                    1401/07/31 - 08:10
-                                </div>
-                            </div>
-                        </div>
-                        <p>
-                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از
-                            صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و
-                            متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم
-                            است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای
-                            متنوع با هدف بهبود ابزارهای کاربردی می باشد.
-                        </p>
-                    </div>
+                        );
+                    })}
                 </Messages>
             ) : (
                 <>
                     <Travels>
                         <div className="head">
-                            <h6>تعرفه‌ها (2)</h6>
+                            <h6>
+                                تعرفه‌ها (
+                                {props.data.TariffFromInstituteForSchool !==
+                                    undefined &&
+                                    props.data.TariffFromInstituteForSchool
+                                        .length}
+                                )
+                            </h6>
                             <div className=" travel-btns">
                                 <button>
                                     <svg
@@ -3434,7 +3442,10 @@ const SchoolInfo = (props) => {
                                                             <div className="d-flex">
                                                                 از
                                                                 <span className="span-1">
-                                                                    {item.start_km} km
+                                                                    {
+                                                                        item.start_km
+                                                                    }{" "}
+                                                                    km
                                                                 </span>
                                                             </div>
                                                         </td>
@@ -3442,12 +3453,25 @@ const SchoolInfo = (props) => {
                                                             <div className="d-flex">
                                                                 تا
                                                                 <span className="span-1">
-                                                                    {item.end_km} km
+                                                                    {
+                                                                        item.end_km
+                                                                    }{" "}
+                                                                    km
                                                                 </span>
                                                             </div>
                                                         </td>
-                                                        <td>رفت و برگشت</td>
-                                                        <td>{item.amount} ریال</td>
+                                                        <td>
+                                                            {item.service_type ==
+                                                            "go"
+                                                                ? "رفت"
+                                                                : item.service_type ==
+                                                                  "return"
+                                                                ? "برگشت"
+                                                                : "رفت و برگشت"}
+                                                        </td>
+                                                        <td>
+                                                            {item.amount} ریال
+                                                        </td>
                                                         <td>
                                                             <div className="d-flex">
                                                                 <button className="w-90 ms-2">

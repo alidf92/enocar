@@ -142,6 +142,10 @@ const TableDiv = styled.div`
         background: #e8fff3 !important;
         color: #50cd89 !important;
     }
+    .bg-per {
+        background: #eee5ff !important;
+        color: #8950fc !important;
+    }
     .amount-span {
         font-weight: 600;
         font-size: 14px;
@@ -1101,6 +1105,36 @@ const TravelInfo = (props) => {
                                                                     <div className="status bg-green">
                                                                         حاضر
                                                                     </div>
+                                                                ) : item.Status_student_service ==
+                                                                  "drive" ? (
+                                                                    <div className="status bg-per">
+                                                                        در مسیر
+                                                                    </div>
+                                                                ) : item.Status_student_service ==
+                                                                  "absence" ? (
+                                                                    <div className="status bg-red">
+                                                                        عدم حضور
+                                                                    </div>
+                                                                ) : item.Status_student_service ==
+                                                                  "cancel" ? (
+                                                                    <div className="status bg-red">
+                                                                        لغو توسط
+                                                                        دانش
+                                                                        آموز
+                                                                    </div>
+                                                                ) : item.Status_student_service ==
+                                                                  "waiting" ? (
+                                                                    <div className="status">
+                                                                        در
+                                                                        انتظار
+                                                                        سرویس
+                                                                    </div>
+                                                                ) : item.Status_student_service ==
+                                                                  "end" ? (
+                                                                    <div className="status bg-green">
+                                                                        پایان
+                                                                        سرویس
+                                                                    </div>
                                                                 ) : (
                                                                     <div className="status bg-red">
                                                                         غایب
@@ -1539,6 +1573,8 @@ const TravelInfo = (props) => {
                                                     </div>
                                                     <div>
                                                         <span className="span-1">
+                                                            {item.name_student !== undefined && item.name_student}
+                                                            {" "}
                                                             {item.text_event}
                                                         </span>
                                                         <span className="span-2">

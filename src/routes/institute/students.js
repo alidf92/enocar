@@ -835,7 +835,13 @@ export default function Students() {
                                                                     رد شده
                                                                 </div>
                                                             ) : (
-                                                                ""
+                                                                <div
+                                                                    className={
+                                                                        "stts yellow"
+                                                                    }
+                                                                >
+                                                                    در انتظار تایید مالی
+                                                                </div>
                                                             )}
                                                         </td>
                                                         <td>
